@@ -24,17 +24,17 @@
   function scrollVideos(direction, button) {
     const slider = button
       .closest('.position-relative')
-      ?.querySelector('#video-slider');
-  
+      ?.querySelector('[id$="-slider"]');
+
     if (!slider) return;
-  
+
     const card = slider.querySelector('.card');
     if (!card) return;
-  
+
     const cardStyle = window.getComputedStyle(card);
     const marginRight = parseInt(cardStyle.marginRight) || 16;
     const cardWidth = card.offsetWidth + marginRight;
-  
+
     slider.scrollBy({ left: direction * cardWidth, behavior: 'smooth' });
   }
   
