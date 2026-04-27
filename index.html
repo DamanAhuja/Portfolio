@@ -1,761 +1,437 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Daman Ahuja - Software Developer</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="description"
+    content="Daman Ahuja is a software developer and XR engineer building immersive products, computer vision prototypes, and practical developer tools."
+  >
+  <title>Daman Ahuja | Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-  <!-- Bootstrap 5 JS Bundle with Popper (REQUIRED for navbar toggle) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-
-
   <link rel="stylesheet" href="style.css">
-  <script src="script.js"></script>
+  <script defer src="script.js"></script>
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-
-
 </head>
-
 <body>
-  <!-- NavBar -->
+  <div class="site-shell">
+    <header class="topbar">
+      <a class="brand" href="#home">
+        <span class="brand-mark">DA</span>
+        <span class="brand-text">Daman Ahuja</span>
+      </a>
 
-  <!-- Add this in your <head> for smooth scrolling -->
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+      </button>
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-    <div class="container-fluid">
-      
-      <!-- Add a brand if needed -->
-  
-      <!-- Toggle button for mobile -->
-        
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-<span class="navbar-toggler-icon"></span>
-</button>
-  
-      <!-- Collapsible content -->
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mx-auto">
-          <li class="nav-item">
-            <a class="nav-link home-link" href="#home">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#about">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#contributions">Education & Experience</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#projects">Projects</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#research">Research</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-  
+      <nav id="site-nav" class="site-nav" aria-label="Primary">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#experience">Experience</a>
+        <a href="#research">Research</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
 
-
-
-  <section id="home">
-    <div class="container">
-      <div class="row align-items-center">
-        <!-- Left Section: Profile + Social -->
-        <div class="col-md-5 text-center" data-aos="fade-right">
-          <img src="Damn.jpg" alt="Daman Ahuja" class="profile-img mb-3">
-          <div class="social-icons">
-            <a href="https://www.linkedin.com/in/daman-ahuja/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-            <a href="https://github.com/damanahuja" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
-            <a href="https://x.com/damanahuja09" target="_blank" rel="noopener" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-            <a href="mailto:damanahuja09@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
-          </div>
-        </div>
-
-        <!-- Right Section: Name + Role + Skills -->
-        <div class="col-md-7 text-center text-md-start" data-aos="fade-left">
-          <h1>Daman Ahuja</h1>
-          <p>Software Developer | Unity Developer</p>
-          <div class="d-flex flex-wrap justify-content-center justify-content-md-start gap-2 mt-3">
-            <span class="skill-badge">JavaScript</span>
-            <span class="skill-badge">Node.js</span>
-            <span class="skill-badge">SDLC</span>
-            <span class="skill-badge">Data Structures</span>
-            <span class="skill-badge">Android Development</span>
-            <span class="skill-badge">C#</span>
-            <span class="skill-badge">Unity 3D</span>
-            <span class="skill-badge">VR Development</span>
-            <span class="skill-badge">AR Development</span>
-            <span class="skill-badge">Unreal Engine</span>
-            <span class="skill-badge">Game Development</span>
-            <span class="skill-badge">Problem Solving</span>
-            <span class="skill-badge">Project Management</span>
-            <span class="skill-badge">Leadership</span>
-            <span class="skill-badge">WebXR</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT SECTION -->
-  <section id="about" class="about-section text-light">
-    <div class="container text-center">
-          <h2 class="mb-4">About Me</h2>
-          <h4 class="intro-heading">
-            Hi <span class="wave">👋</span>, I am <strong>Daman Ahuja</strong>
-          </h4>
-          <p class="mb-5 about-description">
-            <span class="highlight">ex CTO of XRVisionLabs</span>, a cutting-edge deep tech startup building immersive AR, VR, MR, and Metaverse solutions. I lead a multidisciplinary team to deliver innovative XR and AI applications that transform how businesses engage with customers.
-            <br>
-            As a <span class="highlight">VR Developer</span>, I've led projects like <span class="highlight">XRchitect</span> (VR interior design platform) and <span class="highlight">X-Combat</span> (VR military training simulator). My experience includes research at <span class="highlight">Delhi University</span> on motion tracking with Azure Kinect and developing WebXR navigation systems.
-            <br>
-            Beyond technical expertise, I excel in <span class="highlight">leadership, project management, and communication</span>:
+    <main>
+      <section id="home" class="hero section">
+        <div class="hero-copy reveal">
+          <p class="eyebrow">Software Developer and XR Engineer</p>
+          <h1>Building immersive products, research-driven systems, and practical software with real execution behind them.</h1>
+          <p class="hero-summary">
+            I am a Computer Science student at Delhi University, ex-CTO at XRVisionLabs, and a hands-on builder across
+            XR, Unity, research prototypes, and practical software tools. My work sits at the intersection of product
+            thinking, technical depth, and fast execution.
           </p>
 
-          <div class="skills-box d-flex flex-wrap justify-content-center gap-10">
-            <span class="skill-badge">Project Management</span>
-            <span class="skill-badge">Leadership</span>
-            <span class="skill-badge">Critical Thinking</span>
-            <span class="skill-badge">Communication</span><br>
-            <div class="flex-break"></div> <!-- Line break here -->
-            <span class="skill-badge">Team Coordination</span>
-            <span class="skill-badge">Guest Speaking</span>
+          <div class="hero-actions">
+            <a class="button button-primary" href="Daman Ahuja - Resume.pdf" target="_blank" rel="noopener">
+              View Resume
+            </a>
+            <a class="button button-secondary" href="mailto:damanahuja09@gmail.com">
+              Email Me
+            </a>
+          </div>
 
-      </div>
-    </div>
-  </section>
-
-  <!-- Education & Experience -->
-  <section id="contributions" class="section-container">
-        <h2 class="section-heading">Education & Experience</h2>
-
-        <div class="container-fluid my-4">
-          <div class="row g-4">
-
-            <div class="col-md-6">
-              <div class="card h-100">
-                <div class="card-body d-flex flex-column">
-                  <h5 class="card-title">Education</h5>
-
-                  <div class="mb-3">
-                    <h6 class="fw-bold">B.Sc (Hons.) Computer Science</h6>
-                    <p class="mb-1"><span class="highlight-dark">Delhi University</span> | 2027</p>
-                  </div>
-
-                  <div class="mb-3">
-                    <h6 class="fw-bold">AISSCE (PCM)</h6>
-                    <p class="mb-1"><span class="highlight-dark">N.K. Bagrodia Public School, New Delhi</span> | 2023</p>
-                    <p class="mb-1">Result: <span class="highlight-dark">90%</span></p>
-                  </div>
-
-                  <div class="mb-3">
-                    <h6 class="fw-bold">AISSCE</h6>
-                    <p class="mb-1"><span class="highlight-dark">N.K. Bagrodia Public School, New Delhi</span> | 2021</p>
-                    <p class="mb-1">Result: <span class="highlight-dark">87%</span></p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="card h-100">
-                <div class="card-body d-flex flex-column">
-                  <h5 class="card-title">Professional Experience</h5>
-
-                  <div class="mb-3">
-                    <h6 class="fw-bold">CTO - XRVisionLabs</h6>
-                    <p class="card-text">
-                      Led a multidisciplinary team of developers, designers, and researchers to deliver cutting-edge XR and AI applications.
-                      Collaborated with clients to understand requirements and translate them into actionable technical solutions.
-                    </p>
-                  </div>
-
-                  <div class="mb-3">
-                    <h6 class="fw-bold">Software Developer - XRVisionLabs</h6>
-                    <p class="card-text">
-                      Led development of <span class="highlight-dark">XRchitect</span> – a VR interior design platform and
-                      <span class="highlight-dark">X-Combat</span>, a VR-based military training simulator for defense applications.
-                      Created WebXR indoor navigation systems using AR.
-                    </p>
-                  </div>
-
-                  <div class="mb-3">
-                    <h6 class="fw-bold">Research Intern - Delhi University</h6>
-                    <p class="card-text">
-                      Experimented with motion tracking using <span class="highlight-dark">Azure Kinect</span> for real-time full-body tracking in XR environments.
-                      Built prototype projects in Unity and Unreal Engine.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-        </div>
-      </div>
-  </section>
-
-  <!-- Achievements & Certifications -->
-  <section class="section-container">
-        <h2 class="section-heading">Achievements & Certifications</h2>
-
-        <div class="container-fluid my-4">
-          <div class="row g-4">
-
-            <div class="col-md-6">
-              <div class="card h-100">
-                <div class="card-body d-flex flex-column">
-                  <h5 class="card-title">Academic Achievements</h5>
-                  <ul>
-                    <li class="pointer">School Rank <span class="highlight-dark">3</span> in Silver Zone Math Olympiad</li>
-                    <li class="pointer">Scored <span class="highlight-dark">95%</span> in Physics, CBSE examination</li>
-                    <li class="pointer">Made a <span class="highlight-dark">Natural Disaster Management project</span> in ATAL Tinkering Lab</li>
-                    <li class="pointer">Participation in <span class="highlight-dark">International Roundtable Discussions</span> via Generation Global</li>
-                    <li class="pointer">Selected as <span class="highlight-dark">Silver Medalist</span> under the IAYP (International Award for Young People) program</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="card h-100">
-                <div class="card-body d-flex flex-column">
-                  <h5 class="card-title">Certifications & Speaking</h5>
-                  <ul>
-                    <li class="pointer"><span class="highlight-dark">Unity Development</span> – Udemy</li>
-                    <li class="pointer"><span class="highlight-dark">AI Workshop</span> – BE10X</li>
-                    <li class="pointer"><span class="highlight-dark">Augmented Reality Course</span> – FreeCodeCamp</li>
-                    <li class="pointer">Delivered a <span class="highlight-dark">guest lecture</span> at OP Jindal School of Art and Architecture on XR</li>
-                    <li class="pointer">Served as a <span class="highlight-dark">remote speaker</span> at AWE Nite, Florida (Orlando)</li>
-                    <li class="pointer">Achieved <span class="highlight-dark">2 medals and 3 trophies</span> in Hip Hop dance competitions</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-        </div>
-      </div>
-  </section>
-
-  <!-- My projects -->
-  <section id="projects" class="section-container">
-        <h2 class="section-heading text-center mb-4">My Projects</h2>
-
-        <div class="position-relative px-3">
-          <!-- Scroll Buttons -->
-
-          <button class="btn btn-secondary position-absolute top-50 start-0 translate-middle-y z-3 slider-btn"
-            onclick="scrollVideos(-1, this)">
-            &#8592;
-          </button>
-          <button class="btn btn-secondary position-absolute top-50 end-0 translate-middle-y z-3 slider-btn"
-            onclick="scrollVideos(1, this)">
-            &#8594;
-          </button>
-
-          <!-- Scrollable video container -->
-          <div class="overflow-hidden">
-            <div id="video-slider" class="d-flex flex-nowrap"
-              style="overflow-x: auto; scroll-behavior: smooth; gap: 1rem;">
-
-              <!-- Cards (ensure fixed width!) -->
-
-              <div class="col-md-6">
-                <div class="card h-100">
-                  <div class="ratio ratio-16x9">
-                    <iframe src="https://www.youtube.com/embed/nA4qaKeVBL8" allowfullscreen></iframe>
-                  </div>
-                  <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">Xrchitect</h5>
-                    <p class="card-text">
-                      <span class="highlight-dark">Xrchitect</span> is a <span class="highlight-dark">VR/MR</span>
-                      application tailored for <span class="highlight-dark">interior design professionals</span>,
-                      students, and educators to create and visualize design concepts in real-time. Unlike traditional
-                      <span class="highlight-dark">2D design tools</span>, Xrchitect immerses users in a fully
-                      interactive, realistic <span class="highlight-dark">3D environment</span>, allowing them to design
-                      and manipulate spaces within actual or virtual rooms. This powerful tool enables users to
-                      experiment with layouts, furnishings, and color schemes before committing to real-world changes,
-                      offering unmatched immersion and realism for both <span class="highlight-dark">educational</span>
-                      and <span class="highlight-dark">professional</span> use.
-                    </p>
-
-                    <a href="https://www.meta.com/en-gb/experiences/xrchitect/8001533676569691/" class="btn btn-primary mt-auto">Download on Meta Store</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="card h-100">
-                  <div class="ratio ratio-16x9">
-                    <iframe src="https://www.youtube.com/embed/5XzGIZFhy10?si=0ZQ_uZ4MGG5qvW4N" allowfullscreen></iframe>
-                  </div>
-                  <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">TeleTwin</h5>
-                    <p class="card-text">
-                      <span class="highlight-dark">TeleTwin</span> is an innovative <span class="highlight-dark">Digital Twin</span> solution that creates
-                      <span class="highlight-dark">realistic 3D representations of telecom towers</span> for infrastructure management and planning.
-                      This cutting-edge platform enables telecom operators to visualize, monitor, and analyze their tower assets in a virtual environment,
-                      providing detailed insights into <span class="highlight-dark">structural integrity</span>, <span class="highlight-dark">equipment placement</span>,
-                      and <span class="highlight-dark">operational efficiency</span>. By combining photorealistic modeling with real-time data integration,
-                      TeleTwin revolutionizes how telecom infrastructure is managed, planned, and maintained, reducing costs and improving
-                      <span class="highlight-dark">network reliability</span>.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="card h-100">
-                  <div class="ratio ratio-16x9">
-                    <iframe src="https://www.youtube.com/embed/uTWjI4nLecg" allowfullscreen></iframe>
-                  </div>
-                  <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">Digital twin for Threat Monitoring</h5>
-                    <p class="card-text">
-                      Developed during my internship with <span class="highlight-dark">CyberPeace Foundation</span>,
-                      this project is a
-                      <span class="highlight-dark">Mixed Reality-based Digital Twin</span> that visualizes an
-                      organization’s cybersecurity landscape in real time. Designed to bridge the communication gap
-                      between technical teams and senior management, it transforms complex <span
-                        class="highlight-dark">SOC dashboard data</span> into an interactive MR experience. By digitally
-                      replicating the organization’s cyber environment, stakeholders can collaboratively monitor <span
-                        class="highlight-dark">threats</span>, analyze <span
-                        class="highlight-dark">vulnerabilities</span>, and make informed decisions with clarity and
-                      speed—all through an intuitive and immersive interface.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-
-              <div class="col-md-6">
-                <div class="card h-100">
-                  <div class="ratio ratio-16x9">
-                    <iframe src="https://www.youtube.com/embed/qagpxC5bwvQ?si=m3kKmMk27G2Ia8XS" allowfullscreen></iframe>
-                  </div>
-                  <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">VR Cyber War Gaming</h5>
-                    <p class="card-text">
-                      <span class="highlight-dark">Cyber War Gaming VR</span> is a gamified VR-based cyber training
-                      simulation developed
-                      during my internship with <span class="highlight-dark">CyberPeace Foundation</span>, a
-                      military-aligned organization. It immerses
-                      players in evolving cyberattack scenarios where they must identify threats like <span
-                        class="highlight-dark">DDoS</span> or <span class="highlight-dark">SYN floods</span>, take
-                      defensive actions (e.g., <span class="highlight-dark">IP blocking</span>, <span
-                        class="highlight-dark">geo-blocking</span>), and observe real-time impact on system performance.
-                      The simulation features a <span class="highlight-dark">scoring system</span> and provides a
-                      detailed end report analyzing each <span class="highlight-dark">player's responsiveness, accuracy,
-                        and the
-                        effectiveness</span>—positive or negative—of their decisions, making it a powerful tool for
-                      <span class="highlight-dark">both
-                        technical and strategic cybersecurity training</span>.
-                    </p>
-
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="card h-100">
-                  <div class="ratio ratio-16x9">
-                    <iframe src="https://www.youtube.com/embed/hwM7kepj4RM?si=QVdBWMl_U4Fq09U4" allowfullscreen></iframe>
-                  </div>
-                  <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">CombatXR</h5>
-                    <p class="card-text">
-                      <span class="highlight-dark">CombatXR</span> is a high-fidelity combat training platform developed
-                      for the <span class="highlight-dark">Indian Defense forces</span>, combining <span
-                        class="highlight-dark">VR</span>, <span class="highlight-dark">AR</span>, and <span
-                        class="highlight-dark">AI</span> to simulate complex battlefield scenarios. It delivers
-                      <span class="highlight-dark">360° interactive simulations</span> across varied terrains—<span
-                        class="highlight-dark">urban</span>, <span class="highlight-dark">jungle</span>, <span
-                        class="highlight-dark">desert</span>, and <span
-                        class="highlight-dark">counter-insurgency</span>—enhancing soldier reflexes, decision-making,
-                      and tactical coordination. With <span class="highlight-dark">multiplayer support</span>, squads
-                      can train together in synchronized virtual missions. StrikeXR also integrates <span
-                        class="highlight-dark">real-time analytics</span> and <span class="highlight-dark">adaptive
-                        feedback</span>, enabling personalized performance tracking and continuous tactical
-                      improvement—all within a safe, cost-effective virtual environment designed to elevate <span
-                        class="highlight-dark">mission readiness</span>.
-                    </p>
-
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="card h-100">
-                  <div class="ratio ratio-16x9">
-                    <iframe src="https://www.youtube.com/embed/iEXv8YZVcqE?si=lj-D_D5A0BA13YpS" allowfullscreen></iframe>
-                  </div>
-                  <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">PlanXR</h5>
-                    <p class="card-text">
-                      <span class="highlight-dark">PlanXR</span> is a <span class="highlight-dark">Mixed Reality
-                        (MR)</span> application developed to transform mission
-                      planning for the <span class="highlight-dark">Territorial Army</span> by replacing traditional
-                      map-based approaches with immersive <span class="highlight-dark">3D terrain exploration</span>.
-                      The app enables officers to virtually interact with real-world landscapes, analyze geographical
-                      challenges, and make informed, data-driven decisions. Featuring <span
-                        class="highlight-dark">multi-user collaboration</span>, PlanXR allows teams to co-plan missions
-                      in real time within a shared virtual space—enhancing coordination, reducing risk, and
-                      significantly improving <span class="highlight-dark">operational readiness</span> and <span
-                        class="highlight-dark">strategic execution</span>.
-                    </p>
-
-                  </div>
-                </div>
-              </div>
-
-              
-
-              <div class="col-md-6">
-                <div class="card h-100">
-                  <div class="ratio ratio-16x9">
-                    <iframe src="https://www.youtube.com/embed/ejV5lLngW60?si=RNK_Z-A4OcSf1Sqz" allowfullscreen></iframe>
-                  </div>
-                  <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">TopologyXR</h5>
-                    <p class="card-text">
-                      <span class="highlight-dark">TopologyXR</span> is a <span class="highlight-dark">VR/MR</span>
-                      application built for <span class="highlight-dark">data center managers</span> and
-                      <span class="highlight-dark">infrastructure planners</span> to design and visualize data centers
-                      before construction begins. Using highly detailed, photogrammetry-based <span
-                        class="highlight-dark">3D models</span> of servers, the app allows users to manually place,
-                      arrange, and interact with equipment in a life-sized virtual environment. It also features an
-                      <span class="highlight-dark">AI-assisted topology generator</span>, which automatically lays out
-                      optimized data center configurations in real time based on user input—streamlining the planning
-                      process and reducing costly post-construction changes.
-                    </p>
-
-                    <a href="https://www.meta.com/en-gb/experiences/topologyxr/8754157244597877/" class="btn btn-primary mt-auto">Download on Meta Store</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="card h-100">
-                  <div class="ratio ratio-16x9">
-                    <iframe src="https://www.youtube.com/embed/Ef7YVK-0TH0" allowfullscreen></iframe>
-                  </div>
-                  <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">MindMuseum</h5>
-                    <p class="card-text">
-                      <span class="highlight-dark">MindMuseum</span> is an innovative <span
-                        class="highlight-dark">VR</span> application that combines <span
-                        class="highlight-dark">Artificial Intelligence</span> with immersive technology to create
-                      dynamic, interactive museum experiences in real time. Users can explore personalized exhibitions,
-                      where <span class="highlight-dark">AI</span> generates art, artifacts, and displays on command,
-                      responding to voice or text-based input. Whether it’s <span class="highlight-dark">ancient
-                        civilizations</span> or <span class="highlight-dark">futuristic inventions</span>, MindMuseum
-                      tailors content instantly—making it a powerful educational and creative tool that redefines how we
-                      experience museums in the digital age.
-                    </p>
-
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Add more cards here -->
-
+          <div class="hero-links">
+            <a href="https://www.linkedin.com/in/daman-ahuja/" target="_blank" rel="noopener">
+              <i class="fab fa-linkedin"></i>
+              LinkedIn
+            </a>
+            <a href="https://github.com/damanahuja" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i>
+              GitHub
+            </a>
+            <a href="https://x.com/damanahuja09" target="_blank" rel="noopener">
+              <i class="fab fa-x-twitter"></i>
+              X
+            </a>
           </div>
         </div>
-      </div>
-  </section>
 
-  <!-- Hobby Projects -->
-  <section class="section-container">
-        <h2 class="section-heading text-center mb-4">Hobby Projects</h2>
-
-        <div class="position-relative px-3">
-          <!-- Scroll Buttons -->
-          <button class="btn btn-secondary position-absolute top-50 start-0 translate-middle-y z-3 slider-btn"
-            onclick="scrollVideos(-1, this)">
-            &#8592;
-          </button>
-          <button class="btn btn-secondary position-absolute top-50 end-0 translate-middle-y z-3 slider-btn"
-            onclick="scrollVideos(1, this)">
-            &#8594;
-          </button>
-
-          <!-- Scrollable video container -->
-          <div class="overflow-hidden">
-            <div id="video-slider" class="d-flex flex-nowrap"
-              style="overflow-x: auto; scroll-behavior: smooth; gap: 1rem;">
-
-              <!-- Cards (ensure fixed width!) -->
-
-              <div class="col-md-6">
-                <div class="card h-100">
-                  <div class="ratio ratio-16x9">
-                    <img 
-                      src="teleattendance.jpg" 
-                      alt="TeleAttendance App Preview"
-                      class="img-fluid rounded"
-                      style="object-fit: cover; width: 100%; height: 100%;">
-                  </div>
-                  <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">TeleAttendance</h5>
-                    <p class="card-text">
-                      <span class="highlight-dark">TeleAttendance</span> is an <span class="highlight-dark">automated attendance management system</span> built using the
-                      <span class="highlight-dark">Telegram Bot API</span> that allows users to mark and track attendance through simple chat-based commands.
-                      The application streamlines daily attendance workflows by handling <span class="highlight-dark">user validation</span>, 
-                      <span class="highlight-dark">timestamped check-ins</span>, and <span class="highlight-dark">structured record storage</span>.
-                      Designed with reliability and scalability in mind, TeleAttendance demonstrates practical
-                      <span class="highlight-dark">API integration</span>, <span class="highlight-dark">backend logic</span>, and
-                      <span class="highlight-dark">real-world automation</span> use cases.
-                    </p>
-                    <a href="https://github.com/DamanAhuja/TeleBot" class="btn btn-primary mt-auto">Check out Github Repo</a>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="col-md-6">
-                <div class="card h-100">
-                  <div class="ratio ratio-16x9">
-                    <iframe src="https://www.youtube.com/embed/pDBXObiLHp8" allowfullscreen></iframe>
-                  </div>
-                  <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">Archery</h5>
-                    <p class="card-text">
-                      <span class="highlight-dark">Archery</span> is a <span class="highlight-dark">hyper casual Unity game</span> that offers
-                      engaging archery gameplay with intuitive controls and satisfying mechanics. Players can test their aim and precision
-                      in this <span class="highlight-dark">mobile-friendly</span> experience, featuring smooth physics-based arrow shooting
-                      and challenging targets. The game showcases clean game design principles and optimized performance for
-                      <span class="highlight-dark">casual gaming</span> experiences.
-                    </p>
-                    <a href="https://github.com/DamanAhuja/Archery.git" class="btn btn-primary mt-auto">Check out Github Repo</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="card h-100">
-                  <div class="ratio ratio-16x9">
-                    <iframe src="https://www.youtube.com/embed/zVSYFbnVnu0?si=MY9I6dzeuedxk8S6" allowfullscreen></iframe>
-                  </div>
-                  <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">Indoor Navigation</h5>
-                    <p class="card-text"><span class="highlight-dark">Indoor Navigation in AR</span> is an augmented
-                      reality solution
-                      designed to help users
-                      navigate complex indoor spaces, offering real-time directions and location-based information
-                      through their mobile devices. It enhances user experience by providing interactive, visual guides
-                      to easily find their way around large buildings or venues.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="card h-100">
-                  <div class="ratio ratio-16x9">
-                    <iframe src="https://www.youtube.com/embed/1JCG6oDz8rk" allowfullscreen></iframe>
-                  </div>
-                  <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">CrossRoad</h5>
-                    <p class="card-text">
-                      <span class="highlight-dark">CrossRoad</span> is an engaging <span class="highlight-dark">endless runner game</span> where players
-                      navigate through busy traffic and obstacles. The game features <span class="highlight-dark">dynamic gameplay mechanics</span>
-                      with increasing difficulty, colorful graphics, and smooth controls. Players must carefully time their movements to cross
-                      roads, avoid vehicles, and collect rewards while progressing through challenging levels. Built with
-                      <span class="highlight-dark">Unity</span>, it showcases solid game development fundamentals and addictive gameplay.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-
-              <div class="col-md-6">
-                <div class="card h-100">
-                  <div class="ratio ratio-16x9">
-                    <iframe src="https://www.youtube.com/embed/V3wkE32ECs8" allowfullscreen></iframe>
-                  </div>
-                  <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">Angry Bird</h5>
-                    <p class="card-text">
-                      A playful recreation of the classic <span class="highlight-dark">Angry Birds</span> game, where
-                      players launch birds at structures to knock down targets. The game offers <span
-                        class="highlight-dark">physics-based fun</span> and interactive mechanics for all ages.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="card h-100">
-                  <div class="ratio ratio-16x9">
-                    <iframe src="https://www.youtube.com/embed/oZnmkJlJxsQ" allowfullscreen></iframe>
-                  </div>
-                  <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">Galaxy Shooter</h5>
-                    <p class="card-text">
-                      An action-packed space shooter where players control a spaceship to battle waves of enemies in a
-                      visually captivating galaxy. The game features <span class="highlight-dark">power-ups</span> and
-                      increasing difficulty, providing hours of fast-paced fun.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Add more cards here -->
-
+        <div class="hero-visual reveal">
+          <div class="portrait-card">
+            <img src="Damn.jpg" alt="Portrait of Daman Ahuja" class="profile-img">
+            <div class="portrait-caption">
+              <span>Focus Areas</span>
+              <strong>XR, Unity, computer vision, product engineering</strong>
+            </div>
           </div>
         </div>
-      </div>
-  </section>
+      </section>
 
-  <!-- Computer Vision Research -->
-  <section id="research" class="section-container">
-        <h2 class="section-heading">Computer Vision Research</h2>
+      <section class="metrics reveal">
+        <article class="metric-card">
+          <span class="metric-label">Leadership</span>
+          <strong>Ex-CTO at XRVisionLabs</strong>
+          <p>Led multidisciplinary delivery across XR and AI projects.</p>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">Research</span>
+          <strong>Delhi University intern</strong>
+          <p>Worked on motion tracking, Kinect-based pose systems, and immersive interaction prototypes.</p>
+        </article>
+        <article class="metric-card">
+          <span class="metric-label">Execution</span>
+          <strong>From idea to shipped demo</strong>
+          <p>Built products for interior design, digital twins, defense training, and developer automation.</p>
+        </article>
+      </section>
 
-        <div class="position-relative px-3">
-          <!-- Scroll Buttons -->
-          <button class="btn btn-secondary position-absolute top-50 start-0 translate-middle-y z-3 slider-btn"
-            onclick="scrollVideos(-1, this)">
-            &#8592;
-          </button>
-          <button class="btn btn-secondary position-absolute top-50 end-0 translate-middle-y z-3 slider-btn"
-            onclick="scrollVideos(1, this)">
-            &#8594;
-          </button>
-
-          <!-- Scrollable research container -->
-          <div class="overflow-hidden">
-            <div id="research-slider" class="d-flex flex-nowrap"
-              style="overflow-x: auto; scroll-behavior: smooth; gap: 1rem;">
-
-              <!-- Research Cards -->
-
-              <div class="col-md-6">
-                <div class="card h-100">
-                  <div class="ratio ratio-16x9">
-                    <iframe src="https://www.youtube.com/embed/DaCBIIq7UjI" allowfullscreen></iframe>
-                  </div>
-                  <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">Advanced Motion Tracking Research</h5>
-                    <p class="card-text">
-                      This research project explores advanced <span class="highlight-dark">motion tracking</span> and
-                      <span class="highlight-dark">computer vision</span> techniques using cutting-edge sensor technology.
-                      The system demonstrates real-time <span class="highlight-dark">human pose estimation</span> and
-                      <span class="highlight-dark">skeletal tracking</span> capabilities, enabling precise motion capture
-                      for <span class="highlight-dark">XR applications</span>. This work contributes to the development of
-                      more accurate and responsive <span class="highlight-dark">immersive interaction systems</span> and
-                      <span class="highlight-dark">gesture recognition</span> technologies.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="card h-100">
-                  <div class="ratio ratio-16x9">
-                    <img src="Pose.jpeg" class="card-img-top" alt="Pose Detection with Kinect Research" style="object-fit: cover; width: 100%; height: 100%;">
-                  </div>
-                  <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">Pose Detection with Kinect</h5>
-                    <p class="card-text">
-                      This research focuses on <span class="highlight-dark">real-time pose detection</span> using
-                      <span class="highlight-dark">Microsoft Kinect sensors</span> for accurate human body tracking
-                      and analysis. The system implements advanced <span class="highlight-dark">skeletal tracking algorithms</span>
-                      to detect and monitor human poses in real-time, enabling applications in <span class="highlight-dark">motion analysis</span>,
-                      <span class="highlight-dark">gesture recognition</span>, and <span class="highlight-dark">interactive experiences</span>.
-                      This work contributes to the development of more responsive and accurate <span class="highlight-dark">human-computer
-                      interaction systems</span> for XR environments.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="card h-100">
-                  <div class="ratio ratio-16x9">
-                    <iframe src="https://www.youtube.com/embed/VIb4JDBwt-Y" allowfullscreen></iframe>
-                  </div>
-                  <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">Multiple Kinect for Holographic 3D Experience</h5>
-                    <p class="card-text">
-                      For this project, I am developing a <span class="highlight-dark">holographic 3D experience</span> by
-                      synchronizing data from multiple Kinect sensors. The aim is to combine depth information from
-                      various angles to create an immersive, multi-perspective <span class="highlight-dark">3D
-                        model</span>, enhancing realism and interactivity for <span class="highlight-dark">holographic
-                        visualization</span> in <span class="highlight-dark">computer vision applications</span>.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Add more research cards here -->
-
-          </div>
+      <section id="about" class="section">
+        <div class="section-intro reveal">
+          <p class="eyebrow">Why Me</p>
+          <h2>I bring founder-level ownership without losing builder-level detail.</h2>
+          <p>
+            This portfolio shows shipped work, applied research, stakeholder-facing
+            communication, and the ability to operate across product, engineering, and experimentation. I have led teams,
+            built immersive systems, and still enjoy getting deep into implementation.
+          </p>
         </div>
-      </div>
-  </section>
 
-  <!-- Photogrammetry Research -->
-  <section class="section-container">
-        <h2 class="section-heading">Photogrammetry Research</h2>
-        <p class="card-text">
-          I conducted in-depth research to develop an optimized process for creating <span
-            class="highlight-dark">photorealistic models</span> of complex objects, like servers, involving scanning,
-          reconstruction, manual fixing, <span class="highlight-dark">texturing</span>, <span class="highlight-dark">UV
-            mapping</span>, and optimization. Check out the models in <span class="highlight-dark">AR</span> below:
-        </p>
-        <div class="container-fluid my-4"> <!-- Changed to container-fluid -->
-          <div class="row g-4"> <!-- Removed justify-content-center -->
-
-            <div class="col-md-6">
-              <div class="card h-100">
-                <div class="ratio ratio-16x9">
-                  <div id="card">
-                    <model-viewer src="models/310.glb" ios-src="models/310.usdz"
-                      poster="https://xrvisionlabs.com/wp-content/uploads/loading.svg" autoplay alt="A 3D model"
-                      shadow-intensity="1" scale="1 1 1" exposure="1" camera-controls touch-action="pan-y" auto-rotate>
-                    </model-viewer>
-
-                  </div>
-                </div>
-                <div class="card-body d-flex flex-column">
-                  <h5 class="card-title">310 Server</h5>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="card h-100">
-                <div class="ratio ratio-16x9">
-                  <div id="card">
-                    <model-viewer src="models/Lab_2.glb" ios-src="models/Lab.usdz"
-                      poster="https://xrvisionlabs.com/wp-content/uploads/loading.svg" autoplay alt="A 3D model"
-                      shadow-intensity="1" scale="1 1 1" exposure="1" camera-controls touch-action="pan-y" auto-rotate>
-                    </model-viewer>
-
-                  </div>
-
-                </div>
-                <div class="card-body d-flex flex-column">
-                  <h5 class="card-title">Virtual Lab</h5>
-                </div>
-              </div>
-            </div>
-            
+        <div class="strength-grid">
+          <article class="info-card reveal">
+            <h3>Fast ramp-up</h3>
+            <p>I have already worked across Unity, WebXR, backend automation, digital twins, AI-assisted experiences, and research tooling.</p>
+          </article>
+          <article class="info-card reveal">
+            <h3>End-to-end mindset</h3>
+            <p>I can move from understanding the problem to prototyping, shipping, presenting, and iterating with users or stakeholders.</p>
+          </article>
+          <article class="info-card reveal">
+            <h3>Team-ready communication</h3>
+            <p>Client collaboration, public speaking, and cross-functional work are already part of my background, not something I need to learn from zero.</p>
+          </article>
         </div>
+
+        <div class="skill-cluster reveal" aria-label="Skills">
+          <span>JavaScript</span>
+          <span>Node.js</span>
+          <span>C#</span>
+          <span>Unity</span>
+          <span>WebXR</span>
+          <span>AR/VR/MR</span>
+          <span>Unreal Engine</span>
+          <span>Computer Vision</span>
+          <span>Problem Solving</span>
+          <span>Project Management</span>
+          <span>Leadership</span>
+          <span>Rapid Prototyping</span>
+        </div>
+      </section>
+
+      <section id="projects" class="section">
+        <div class="section-intro reveal">
+          <p class="eyebrow">Selected Work</p>
+          <h2>Projects that demonstrate range, not just interest.</h2>
+          <p>
+            I cut the portfolio down to the strongest examples: products with real users, research-backed systems,
+            and a few smaller builds that show breadth.
+          </p>
+        </div>
+
+        <div class="project-grid">
+          <article class="project-card reveal featured">
+            <div class="media-frame">
+              <iframe src="https://www.youtube.com/embed/nA4qaKeVBL8" title="XRchitect demo" loading="lazy" allowfullscreen></iframe>
+            </div>
+            <div class="project-body">
+              <div class="tag-row">
+                <span>VR</span>
+                <span>Product</span>
+                <span>Meta Store</span>
+              </div>
+              <h3>XRchitect</h3>
+              <p>Immersive interior design platform for real-time 3D layout exploration, design review, and experiential visualization.</p>
+              <ul>
+                <li>Replaced flat 2D planning with fully navigable design sessions.</li>
+                <li>Built for professional and educational use cases.</li>
+              </ul>
+              <a class="text-link" href="https://www.meta.com/en-gb/experiences/xrchitect/8001533676569691/" target="_blank" rel="noopener">View on Meta Store</a>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="media-frame">
+              <iframe src="https://www.youtube.com/embed/hwM7kepj4RM?si=QVdBWMl_U4Fq09U4" title="CombatXR demo" loading="lazy" allowfullscreen></iframe>
+            </div>
+            <div class="project-body">
+              <div class="tag-row">
+                <span>Defense</span>
+                <span>XR</span>
+                <span>Simulation</span>
+              </div>
+              <h3>CombatXR</h3>
+              <p>High-fidelity battlefield training system blending VR, AR, and AI for defense-oriented simulation and coordinated practice.</p>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="media-frame">
+              <iframe src="https://www.youtube.com/embed/iEXv8YZVcqE?si=lj-D_D5A0BA13YpS" title="PlanXR demo" loading="lazy" allowfullscreen></iframe>
+            </div>
+            <div class="project-body">
+              <div class="tag-row">
+                <span>Mixed Reality</span>
+                <span>Collaboration</span>
+              </div>
+              <h3>PlanXR</h3>
+              <p>Mission planning tool for terrain exploration and collaborative decision-making in a shared mixed reality space.</p>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="media-frame">
+              <iframe src="https://www.youtube.com/embed/5XzGIZFhy10?si=0ZQ_uZ4MGG5qvW4N" title="TeleTwin demo" loading="lazy" allowfullscreen></iframe>
+            </div>
+            <div class="project-body">
+              <div class="tag-row">
+                <span>Digital Twin</span>
+                <span>Infrastructure</span>
+              </div>
+              <h3>TeleTwin</h3>
+              <p>3D telecom tower twin for inspection, planning, and infrastructure visualization with stronger operational clarity.</p>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="media-frame">
+              <img src="teleattendance.jpg" alt="TeleAttendance preview" loading="lazy">
+            </div>
+            <div class="project-body">
+              <div class="tag-row">
+                <span>Automation</span>
+                <span>Bot</span>
+                <span>Backend</span>
+              </div>
+              <h3>TeleAttendance</h3>
+              <p>Telegram-based attendance workflow automation with validation, timestamping, and structured records.</p>
+              <a class="text-link" href="https://github.com/DamanAhuja/TeleBot" target="_blank" rel="noopener">Open GitHub Repo</a>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="media-frame">
+              <iframe src="https://www.youtube.com/embed/ejV5lLngW60?si=RNK_Z-A4OcSf1Sqz" title="TopologyXR demo" loading="lazy" allowfullscreen></iframe>
+            </div>
+            <div class="project-body">
+              <div class="tag-row">
+                <span>VR/MR</span>
+                <span>AI-assisted</span>
+              </div>
+              <h3>TopologyXR</h3>
+              <p>Data center planning environment with photogrammetry-grade assets and AI-assisted layout generation.</p>
+              <a class="text-link" href="https://www.meta.com/en-gb/experiences/topologyxr/8754157244597877/" target="_blank" rel="noopener">View on Meta Store</a>
+            </div>
+          </article>
+
+          <article class="project-card reveal compact">
+            <div class="project-body">
+              <div class="tag-row">
+                <span>Cybersecurity</span>
+                <span>MR</span>
+              </div>
+              <h3>Threat Monitoring Digital Twin</h3>
+              <p>Mixed reality visualization system translating security data into interactive decision support for leadership teams.</p>
+            </div>
+          </article>
+
+          <article class="project-card reveal compact">
+            <div class="project-body">
+              <div class="tag-row">
+                <span>Unity</span>
+                <span>Game Dev</span>
+              </div>
+              <h3>Archery, CrossRoad, Galaxy Shooter</h3>
+              <p>Smaller game projects used to sharpen gameplay systems, iteration speed, and performance-aware implementation.</p>
+              <a class="text-link" href="https://github.com/DamanAhuja/Archery.git" target="_blank" rel="noopener">Open Archery Repo</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="experience" class="section">
+        <div class="section-intro reveal">
+          <p class="eyebrow">Experience</p>
+          <h2>Professional work, leadership, and academics.</h2>
+        </div>
+
+        <div class="timeline-grid">
+          <article class="timeline-card reveal">
+            <span class="timeline-label">Experience</span>
+            <h3>CTO, XRVisionLabs</h3>
+            <p>Led a multidisciplinary team delivering XR and AI work across product development, technical planning, and client execution.</p>
+          </article>
+          <article class="timeline-card reveal">
+            <span class="timeline-label">Experience</span>
+            <h3>Software Developer, XRVisionLabs</h3>
+            <p>Built immersive products including XRchitect, CombatXR, and WebXR navigation workflows.</p>
+          </article>
+          <article class="timeline-card reveal">
+            <span class="timeline-label">Research</span>
+            <h3>Research Intern, Delhi University</h3>
+            <p>Prototyped motion tracking workflows using Azure Kinect, Unity, and Unreal Engine for immersive environments.</p>
+          </article>
+          <article class="timeline-card reveal">
+            <span class="timeline-label">Education</span>
+            <h3>B.Sc. (Hons.) Computer Science</h3>
+            <p>Delhi University, expected 2027.</p>
+          </article>
+          <article class="timeline-card reveal">
+            <span class="timeline-label">Academics</span>
+            <h3>School Performance</h3>
+            <p>90% in AISSCE (PCM) in 2023 and 87% in AISSCE in 2021.</p>
+          </article>
+          <article class="timeline-card reveal">
+            <span class="timeline-label">Speaking</span>
+            <h3>Public-facing communication</h3>
+            <p>Guest lecture at OP Jindal School of Art and Architecture and remote speaker at AWE Nite Florida.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="research" class="section">
+        <div class="section-intro reveal">
+          <p class="eyebrow">Research</p>
+          <h2>Computer vision and photogrammetry work that supports the product side.</h2>
+          <p>These projects matter because they show I can do more than interface work. I can also work close to sensing, spatial computing, and technical experimentation.</p>
+        </div>
+
+        <div class="research-grid">
+          <article class="project-card reveal">
+            <div class="media-frame">
+              <iframe src="https://www.youtube.com/embed/DaCBIIq7UjI" title="Advanced motion tracking research" loading="lazy" allowfullscreen></iframe>
+            </div>
+            <div class="project-body">
+              <h3>Advanced Motion Tracking</h3>
+              <p>Explored pose estimation, skeletal tracking, and responsive immersive interaction systems using advanced sensor inputs.</p>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="media-frame">
+              <img src="Pose.jpeg" alt="Pose detection with Kinect" loading="lazy">
+            </div>
+            <div class="project-body">
+              <h3>Pose Detection with Kinect</h3>
+              <p>Real-time body tracking research using Microsoft Kinect for motion analysis, gesture systems, and XR interaction.</p>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="media-frame">
+              <iframe src="https://www.youtube.com/embed/VIb4JDBwt-Y" title="Multiple Kinect holographic 3D experience" loading="lazy" allowfullscreen></iframe>
+            </div>
+            <div class="project-body">
+              <h3>Multi-Kinect Holographic Capture</h3>
+              <p>Combined depth data from multiple sensors to push toward richer, multi-angle holographic visualization.</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="section-intro reveal photogrammetry-intro">
+          <p class="eyebrow">3D Assets</p>
+          <h2>Photogrammetry experiments for production-quality spatial assets.</h2>
+          <p>I developed workflows for scanning, reconstruction, cleanup, texturing, UV mapping, and optimization of detailed 3D models.</p>
+        </div>
+
+        <div class="model-grid">
+          <article class="model-card reveal">
+            <model-viewer
+              src="models/310.glb"
+              ios-src="models/310.usdz"
+              poster="https://xrvisionlabs.com/wp-content/uploads/loading.svg"
+              alt="3D model of a server"
+              shadow-intensity="1"
+              exposure="1"
+              camera-controls
+              auto-rotate
+            ></model-viewer>
+            <div class="project-body">
+              <h3>310 Server</h3>
+              <p>Photorealistic infrastructure asset prepared for immersive product environments.</p>
+            </div>
+          </article>
+
+          <article class="model-card reveal">
+            <model-viewer
+              src="models/Lab_2.glb"
+              ios-src="models/Lab.usdz"
+              poster="https://xrvisionlabs.com/wp-content/uploads/loading.svg"
+              alt="3D model of a virtual lab"
+              shadow-intensity="1"
+              exposure="1"
+              camera-controls
+              auto-rotate
+            ></model-viewer>
+            <div class="project-body">
+              <h3>Virtual Lab</h3>
+              <p>Environment model demonstrating scan-to-usable-asset workflow quality.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-intro reveal">
+          <p class="eyebrow">Highlights</p>
+          <h2>Additional proof points.</h2>
+        </div>
+
+        <div class="highlight-grid">
+          <article class="info-card reveal">
+            <h3>Academic achievements</h3>
+            <p>School rank 3 in Silver Zone Math Olympiad and 95% in Physics in CBSE examinations.</p>
+          </article>
+          <article class="info-card reveal">
+            <h3>Certifications</h3>
+            <p>Unity Development, AI Workshop, and Augmented Reality coursework.</p>
+          </article>
+          <article class="info-card reveal">
+            <h3>Outside tech</h3>
+            <p>Silver Medalist under IAYP and multiple medals and trophies in hip hop dance competitions.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer id="contact" class="footer reveal">
+      <div>
+        <p class="eyebrow">Contact</p>
+        <h2>Let&apos;s build something ambitious.</h2>
+        <p>If you want to discuss products, engineering, XR, or collaboration, reach out.</p>
       </div>
-  </section>
 
-  <!-- Footer / End of Page -->
-  <footer class="text-center py-5">
-    <a href="#home" class="btn btn-outline-primary px-5 py-3" role="button">
-      Back to Top ↑
-    </a>
-    <p class="mt-4 text-muted">&copy; 2025 Daman Ahuja. All rights reserved.</p>
-  </footer>
-
+      <div class="footer-actions">
+        <a class="button button-primary" href="mailto:damanahuja09@gmail.com">damanahuja09@gmail.com</a>
+        <a class="button button-secondary" href="Daman Ahuja - Resume.pdf" target="_blank" rel="noopener">Open Resume</a>
+      </div>
+    </footer>
+  </div>
 </body>
-
 </html>
