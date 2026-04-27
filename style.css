@@ -60,6 +60,7 @@ model-viewer {
 
 iframe {
   border: 0;
+  height: 100%;
 }
 
 .site-shell {
@@ -402,10 +403,21 @@ iframe {
 .model-card {
   overflow: hidden;
   border-radius: var(--radius);
+  transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
 }
 
 .project-card.featured {
   grid-column: span 2;
+}
+
+.project-card:hover,
+.model-card:hover,
+.info-card:hover,
+.timeline-card:hover,
+.metric-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(251, 146, 60, 0.28);
+  box-shadow: 0 28px 70px rgba(4, 12, 20, 0.44);
 }
 
 .project-card.compact .project-body {
@@ -420,6 +432,23 @@ iframe {
   overflow: hidden;
   aspect-ratio: 16 / 9;
   background: #0a1219;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.media-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 28%, transparent 72%, rgba(7, 17, 24, 0.18)),
+    radial-gradient(circle at top right, rgba(20, 184, 166, 0.14), transparent 34%);
+  pointer-events: none;
+}
+
+.media-frame iframe,
+.media-frame img {
+  width: 100%;
+  height: 100%;
 }
 
 .media-frame img {
@@ -429,6 +458,9 @@ iframe {
 
 .project-body {
   padding: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 38%),
+    rgba(10, 18, 26, 0.36);
 }
 
 .tag-row {
@@ -454,6 +486,12 @@ iframe {
   margin-top: 18px;
   color: #fbc287;
   font-weight: 600;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.text-link:hover {
+  color: #ffd4aa;
+  transform: translateX(3px);
 }
 
 .timeline-grid {
