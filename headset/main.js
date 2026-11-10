@@ -250,6 +250,7 @@ const LAPTOP_LINES = [
 const REC_RADIUS = 2.5;
 const REC_SPACING = 0.95;
 
+const livePanels = [];
 const DESK_TOP = 0.9;
 const DESK_BOUNDS = { minX: -1.27, maxX: 1.27, minZ: -0.97, maxZ: 0.28 };
 const DESK_OBSTACLES = [
@@ -1212,19 +1213,29 @@ function buildExhibit(kind, holder) {
     stripe.position.y = 0.15;
     const roof = new THREE.Mesh(new RoundedBoxGeometry(0.58, 0.025, 0.36, 3, 0.01), cream);
     roof.position.y = 0.52;
-    spin.add(body, stripe, roof);
+    const cab = new THREE.Group();
+    cab.add(body, stripe, roof);
+    spin.add(cab);
+    const wheels = [];
     for (const [x, z] of [[-0.26, -0.15], [0.26, -0.15], [-0.26, 0.15], [0.26, 0.15]]) {
       const post = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.28, 8), dark);
       post.position.set(x, 0.38, z);
       const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.04, 20), dark);
       wheel.rotation.x = Math.PI / 2;
       wheel.position.set(x * 0.85, 0.07, z * 1.08);
-      spin.add(post, wheel);
+      wheel.add(new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.044, 0.014), cream));
+      cab.add(post);
+      spin.add(wheel);
+      wheels.push(wheel);
     }
+    animate = (time) => {
+      wheels.forEach((wheel) => { wheel.rotation.y = -time * 5; });
+      cab.position.y = Math.abs(Math.sin(time * 9)) * 0.006;
+    };
     for (const x of [-0.12, 0.1]) {
       const seat = new THREE.Mesh(new RoundedBoxGeometry(0.14, 0.12, 0.28, 3, 0.03), dark);
       seat.position.set(x, 0.3, 0);
-      spin.add(seat);
+      cab.add(seat);
     }
   } else if (kind === "bridge") {
     const left = new THREE.Mesh(new RoundedBoxGeometry(0.24, 0.24, 0.24, 4, 0.05), cream);
@@ -1356,6 +1367,7 @@ function updateVR(p, time, dt) {
   vr.dust.rotation.y += dt * 0.01;
 
   const inRing = inRingRange(p);
+  if (inRing) livePanels.forEach((draw) => draw(time));
   let hit = null;
   if (inRing && !coarsePointer) {
     raycaster.setFromCamera(pointer, camera);
@@ -1444,11 +1456,12 @@ function makePanelTexture(project, index) {
   texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
   let image = null;
-  const draw = () => {
-    drawPanel(ctx, W, H, project, index, image);
+  const draw = (time = 0) => {
+    drawPanel(ctx, W, H, project, index, image, time);
     texture.needsUpdate = true;
   };
   draw();
+  if (project.sketch === "buggy") livePanels.push((time) => { if (!image) draw(time); });
 
   fontsReady.then(draw);
   loadPanelImage(project).then((bitmap) => {
@@ -1483,7 +1496,7 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.roundRect(x, y, w, h, r);
 }
 
-function drawPanel(ctx, W, H, project, index, image) {
+function drawPanel(ctx, W, H, project, index, image, time = 0) {
   ctx.clearRect(0, 0, W, H);
   roundRect(ctx, 4, 4, W - 8, H - 8, 30);
   ctx.fillStyle = "#0d1008";
@@ -1508,7 +1521,7 @@ function drawPanel(ctx, W, H, project, index, image) {
     const ih = image.height * s;
     ctx.drawImage(image, mx + (mw - iw) / 2, my + (mh - ih) / 2, iw, ih);
   } else {
-    drawSketch(ctx, project.sketch, mx, my, mw, mh);
+    drawSketch(ctx, project.sketch, mx, my, mw, mh, time);
   }
   const shade = ctx.createLinearGradient(0, my + mh - 90, 0, my + mh);
   shade.addColorStop(0, "rgba(13,16,8,0)");
@@ -1560,7 +1573,26 @@ function wrap(ctx, text, x, y, maxWidth, lineHeight, maxLines) {
   ctx.fillText(line, x, y + lines * lineHeight);
 }
 
-function drawSketch(ctx, kind, x, y, w, h) {
+function pointOnRoute(points, t) {
+  const lengths = [];
+  let total = 0;
+  for (let i = 1; i < points.length; i++) {
+    const d = Math.hypot(points[i][0] - points[i - 1][0], points[i][1] - points[i - 1][1]);
+    lengths.push(d);
+    total += d;
+  }
+  let along = (t % 1) * total;
+  for (let i = 0; i < lengths.length; i++) {
+    if (along <= lengths[i]) {
+      const k = along / lengths[i];
+      return [lerp(points[i][0], points[i + 1][0], k), lerp(points[i][1], points[i + 1][1], k)];
+    }
+    along -= lengths[i];
+  }
+  return points[points.length - 1];
+}
+
+function drawSketch(ctx, kind, x, y, w, h, time = 0) {
   ctx.save();
   ctx.translate(x, y);
   ctx.strokeStyle = "rgba(243,239,228,0.08)";
@@ -1596,7 +1628,16 @@ function drawSketch(ctx, kind, x, y, w, h) {
     ctx.lineTo(w - 90, h - 95);
     ctx.stroke();
     ctx.setLineDash([]);
-    for (const [cx, cy, c] of [[240, 95, SIGNAL_CSS], [w / 2, h / 2, "#efe8d8"], [w - 220, h - 95, SIGNAL_CSS]]) {
+    const upper = [[90, 95], [w - 90, 95]];
+    const lower = [[w - 90, h - 95], [90, h - 95]];
+    const link = [[90, 95], [w / 2, 95], [w / 2, h - 95], [w - 90, h - 95]];
+    const buggies = [
+      [upper, 0.1 + time * 0.11, SIGNAL_CSS],
+      [lower, 0.45 + time * 0.08, SIGNAL_CSS],
+      [link, 0.2 + time * 0.07, "#efe8d8"]
+    ];
+    for (const [route, t, c] of buggies) {
+      const [cx, cy] = pointOnRoute(route, t);
       ctx.fillStyle = c;
       ctx.beginPath();
       ctx.arc(cx, cy, 13, 0, Math.PI * 2);
@@ -1961,13 +2002,26 @@ function openProject(i) {
     sketchCanvas.width = 1280;
     sketchCanvas.height = 720;
     const ctx = sketchCanvas.getContext("2d");
-    ctx.fillStyle = "#05070a";
-    ctx.fillRect(0, 0, 1280, 720);
-    ctx.scale(1280 / 964, 720 / 350);
-    drawSketch(ctx, project.sketch, 0, 0, 964, 350);
+    const s = 1280 / 964;
+    const paint = (time) => {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.fillStyle = "#05070a";
+      ctx.fillRect(0, 0, 1280, 720);
+      ctx.setTransform(s, 0, 0, s, 0, (720 - 350 * s) / 2);
+      drawSketch(ctx, project.sketch, 0, 0, 964, 350, time);
+    };
+    paint(clock.elapsedTime);
     sketchCanvas.setAttribute("role", "img");
     sketchCanvas.setAttribute("aria-label", `${project.title} diagram`);
     dialogMedia.replaceChildren(sketchCanvas);
+    if (project.sketch === "buggy") {
+      const loop = () => {
+        if (!sketchCanvas.isConnected) return;
+        paint(clock.elapsedTime);
+        requestAnimationFrame(loop);
+      };
+      requestAnimationFrame(loop);
+    }
   }
 
   dialog.showModal();
