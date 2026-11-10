@@ -117,6 +117,57 @@ const PROJECTS = [
   }
 ];
 
+const RECORD = [
+  {
+    time: "Jun 2026 — now",
+    title: "AI and Automation Intern",
+    org: "GMR Group, Smart Airport City",
+    line: "Smart Buggy at Terminal 3, IGI Airport: the Android apps, the MQTT telemetry loop, and an ARCore wayfinding proof of concept.",
+    exhibit: "buggy",
+    pin: "GMR"
+  },
+  {
+    time: "Sep 2026 — now",
+    title: "Software Engineering Intern",
+    org: "Tap4Technologies, remote",
+    line: "Carbon: Salesforce and Mailchimp research, then the first sync from Mailchimp audiences into Carbon contacts.",
+    exhibit: "bridge",
+    pin: "Tap4"
+  },
+  {
+    time: "Feb 2024 — May 2026",
+    title: "VR Development Intern",
+    org: "University of Delhi",
+    line: "Azure Kinect tracking at 30 fps and full-body avatars. On the pedestal: a photogrammetry scan of a 310 server from the lab.",
+    exhibit: "scan",
+    pin: "DU"
+  },
+  {
+    time: "Feb 2024 — Oct 2025",
+    title: "Founding member and CTO",
+    org: "XRVisionLabs",
+    line: "A six-person team across two client projects and three releases, delivered on time.",
+    exhibit: "headset",
+    pin: "XRVL"
+  },
+  {
+    time: "Jan 2024 — Aug 2025",
+    title: "Game developer",
+    org: "AltReality Labs",
+    line: "Three physics simulations shipped in Unity: archery, bowling, and road crossing.",
+    exhibit: "target",
+    pin: "AltReality"
+  },
+  {
+    time: "Aug 2023 — Jul 2024",
+    title: "Data Management Head",
+    org: "Placement Cell, University of Delhi",
+    line: "The student and alumni databases behind placement and internship drives.",
+    exhibit: "database",
+    pin: "Placement"
+  }
+];
+
 const FUN = {
   music: {
     kicker: "Off the clock · Music",
@@ -153,13 +204,27 @@ const FUN = {
 
 const P = {
   ringStart: 0.3,
-  ringEnd: 0.74,
-  labStart: 0.745,
+  ringEnd: 0.69,
+  labStart: 0.7,
+  recStart: 0.715,
+  recEnd: 0.835,
   labEnd: 0.84,
   roomSwitch: 0.24,
   exitSwitch: 0.877,
   funEnd: 0.955
 };
+
+const LAPTOP_LINES = [
+  ["$ git commit -m \"one last thing\"", "build passing ✓"],
+  ["$ ./run --demo", "works on my machine ✓"],
+  ["$ git push --force", "just kidding. never on main."],
+  ["$ sleep 8h", "command not found"],
+  ["$ chai --refill", "productivity +40%"],
+  ["$ git blame", "it was me. it's always me."]
+];
+
+const REC_RADIUS = 2.5;
+const REC_SPACING = 0.95;
 
 const DESK_TOP = 0.9;
 const DESK_BOUNDS = { minX: -1.27, maxX: 1.27, minZ: -0.97, maxZ: 0.28 };
@@ -254,11 +319,15 @@ window.addEventListener("resize", () => {
   readScroll();
 });
 
+function jumpTo(p) {
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  window.scrollTo({ top: p * max, behavior: reduceMotion ? "auto" : "smooth" });
+}
+
 document.querySelectorAll("[data-jump]").forEach((el) => {
   el.addEventListener("click", (event) => {
     event.preventDefault();
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    window.scrollTo({ top: Number(el.dataset.jump) * max, behavior: reduceMotion ? "auto" : "smooth" });
+    jumpTo(Number(el.dataset.jump));
   });
 });
 
@@ -271,6 +340,8 @@ canvas.addEventListener("click", () => {
   if (hovered !== null) openProject(hovered);
   else if (hoveredProp === "lamp") toggleLamp();
   else if (hoveredProp === "football" || hoveredProp === "cricket") kickBall(hoveredProp);
+  else if (hoveredProp === "laptop") room.props.find((prop) => prop.key === "laptop").group.userData.nextLine();
+  else if (hoveredProp === "headset") jumpTo(P.ringStart);
   else if (hoveredProp) openFun(hoveredProp);
 });
 
@@ -447,6 +518,8 @@ function buildRoom() {
     { key: "games", group: controller, hit: controller, anchor: new THREE.Vector3(0.42, 1.02, 0.16) },
     { key: "travel", group: globe.group, hit: globe.group, anchor: new THREE.Vector3(-0.42, 1.25, -0.62) },
     { key: "lamp", group: null, hit: lampHit, anchor: null },
+    { key: "laptop", group: laptop, hit: laptop, anchor: null },
+    { key: "headset", group: headset.group, hit: headset.group, anchor: null },
     ...balls.map((ball) => ({ key: ball.key, group: ball.mesh, hit: ball.mesh, anchor: null }))
   ];
   props.forEach((prop) => {
@@ -702,20 +775,30 @@ function buildLaptop() {
   screenCanvas.width = 512;
   screenCanvas.height = 320;
   const ctx = screenCanvas.getContext("2d");
-  ctx.fillStyle = "#10110e";
-  ctx.fillRect(0, 0, 512, 320);
-  ctx.fillStyle = SIGNAL_CSS;
-  ctx.fillRect(28, 32, 18, 18);
-  ctx.fillStyle = "#f3efe4";
-  ctx.font = "600 34px Georgia, serif";
-  ctx.fillText("Daman Ahuja", 58, 50);
-  ctx.fillStyle = "#b7b1a3";
-  ctx.font = "20px monospace";
-  ctx.fillText("$ git commit -m \"one last thing\"", 28, 110);
-  ctx.fillStyle = SIGNAL_CSS;
-  ctx.fillText("build passing ✓", 28, 144);
   const screenTex = new THREE.CanvasTexture(screenCanvas);
   screenTex.colorSpace = THREE.SRGBColorSpace;
+  let line = 0;
+  const drawScreen = () => {
+    const [command, result] = LAPTOP_LINES[line % LAPTOP_LINES.length];
+    ctx.fillStyle = "#10110e";
+    ctx.fillRect(0, 0, 512, 320);
+    ctx.fillStyle = SIGNAL_CSS;
+    ctx.fillRect(28, 32, 18, 18);
+    ctx.fillStyle = "#f3efe4";
+    ctx.font = "600 34px Georgia, serif";
+    ctx.fillText("Daman Ahuja", 58, 50);
+    ctx.fillStyle = "#b7b1a3";
+    ctx.font = "20px monospace";
+    ctx.fillText(command, 28, 110);
+    ctx.fillStyle = SIGNAL_CSS;
+    ctx.fillText(result, 28, 144);
+    screenTex.needsUpdate = true;
+  };
+  drawScreen();
+  group.userData.nextLine = () => {
+    line += 1;
+    drawScreen();
+  };
 
   const lid = new THREE.Group();
   const back = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.32, 0.012), shell);
@@ -812,6 +895,8 @@ function updateRoom(p, time, dt) {
     tmpA.copy(group.position);
     camera.lookAt(tmpA);
     lensMat.emissiveIntensity = lerp(0.08, 2.6, range(p, 0.14, 0.22));
+    camera.updateMatrixWorld();
+    updateProps(p, time);
   } else {
     group.position.copy(H_REST);
     group.rotation.set(-0.04, 0.6, 0.05);
@@ -828,7 +913,8 @@ function updateRoom(p, time, dt) {
 }
 
 function updateProps(p, time) {
-  const active = p > P.exitSwitch + 0.02 && p < P.funEnd + 0.004;
+  const onCover = p < 0.04;
+  const active = onCover || (p > P.exitSwitch + 0.02 && p < P.funEnd + 0.004);
   let hit = null;
   if (active) {
     raycaster.setFromCamera(pointer, camera);
@@ -916,60 +1002,155 @@ function buildVR() {
     return { group, front, angle, baseY: 1.6 };
   });
 
-  const pedestal = new THREE.Group();
+  const ringEndAngle = (PROJECTS.length - 1) * step;
+  const pedestals = RECORD.map((entry, i) => {
+    const angle = ringEndAngle + (i + 1) * REC_SPACING;
+    const pedestal = buildPedestal();
+    pedestal.group.position.set(Math.sin(angle) * REC_RADIUS, -3, -Math.cos(angle) * REC_RADIUS);
+    pedestal.group.rotation.y = -angle;
+    const exhibit = buildExhibit(entry.exhibit, pedestal.exhibit);
+    scene.add(pedestal.group);
+    return { ...pedestal, angle, animate: exhibit.animate };
+  });
+
+  return { scene, panels, step, dust, pedestals };
+}
+
+function buildPedestal() {
+  const group = new THREE.Group();
   const plinth = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.75, 0.85, 0.3, 48),
+    new THREE.CylinderGeometry(0.55, 0.62, 0.3, 48),
     new THREE.MeshStandardMaterial({ color: 0x14170f, roughness: 0.6, metalness: 0.3 })
   );
   plinth.position.y = 0.15;
-  const plinthEdge = new THREE.Mesh(
-    new THREE.TorusGeometry(0.75, 0.012, 8, 96),
-    new THREE.MeshBasicMaterial({ color: SIGNAL })
-  );
-  plinthEdge.rotation.x = Math.PI / 2;
-  plinthEdge.position.y = 0.3;
+  const edge = new THREE.Mesh(new THREE.TorusGeometry(0.55, 0.012, 8, 96), new THREE.MeshBasicMaterial({ color: SIGNAL }));
+  edge.rotation.x = Math.PI / 2;
+  edge.position.y = 0.3;
   const scanLine = new THREE.Mesh(
-    new THREE.TorusGeometry(0.62, 0.006, 8, 96),
-    new THREE.MeshBasicMaterial({ color: SIGNAL, transparent: true, opacity: 0.85 })
+    new THREE.TorusGeometry(0.46, 0.005, 8, 96),
+    new THREE.MeshBasicMaterial({ color: SIGNAL, transparent: true, opacity: 0.8 })
   );
   scanLine.rotation.x = Math.PI / 2;
   const exhibit = new THREE.Group();
   exhibit.position.y = 0.3;
-  pedestal.add(plinth, plinthEdge, scanLine, exhibit);
-  pedestal.position.y = -3;
-  scene.add(pedestal);
+  group.add(plinth, edge, scanLine, exhibit);
+  return { group, exhibit, scanLine };
+}
 
-  const placeholder = new THREE.Mesh(
-    new THREE.IcosahedronGeometry(0.5, 1),
-    new THREE.MeshBasicMaterial({ color: SIGNAL, wireframe: true })
-  );
-  placeholder.position.y = 0.6;
-  exhibit.add(placeholder);
+function fitModel(model, target) {
+  const box = new THREE.Box3().setFromObject(model);
+  const size = box.getSize(new THREE.Vector3());
+  model.scale.setScalar(target / Math.max(size.x, size.y, size.z));
+  const scaled = new THREE.Box3().setFromObject(model);
+  const center = scaled.getCenter(new THREE.Vector3());
+  model.position.set(-center.x, -scaled.min.y, -center.z);
+}
 
-  new GLTFLoader().load(
-    "../models/310.glb",
-    (gltf) => {
-      const model = gltf.scene;
-      const box = new THREE.Box3().setFromObject(model);
-      const size = box.getSize(new THREE.Vector3());
-      const scale = 1.25 / Math.max(size.x, size.y, size.z);
-      model.scale.setScalar(scale);
-      const scaled = new THREE.Box3().setFromObject(model);
-      const center = scaled.getCenter(new THREE.Vector3());
-      model.position.set(-center.x, -scaled.min.y, -center.z);
-      exhibit.remove(placeholder);
-      exhibit.add(model);
-    },
-    undefined,
-    () => {}
-  );
+function buildExhibit(kind, holder) {
+  const cream = new THREE.MeshStandardMaterial({ color: 0xefe8d8, roughness: 0.5 });
+  const dark = new THREE.MeshStandardMaterial({ color: 0x1d1e1b, roughness: 0.6 });
+  const glow = new THREE.MeshStandardMaterial({ color: SIGNAL, emissive: SIGNAL, emissiveIntensity: 0.6 });
+  const spin = new THREE.Group();
+  holder.add(spin);
+  let animate = () => {};
 
-  return { scene, panels, step, dust, pedestal, exhibit, scanLine };
+  if (kind === "buggy") {
+    const body = new THREE.Mesh(new RoundedBoxGeometry(0.62, 0.16, 0.34, 4, 0.05), cream);
+    body.position.y = 0.17;
+    const stripe = new THREE.Mesh(new THREE.BoxGeometry(0.63, 0.025, 0.345), glow);
+    stripe.position.y = 0.15;
+    const roof = new THREE.Mesh(new RoundedBoxGeometry(0.58, 0.025, 0.36, 3, 0.01), cream);
+    roof.position.y = 0.52;
+    spin.add(body, stripe, roof);
+    for (const [x, z] of [[-0.26, -0.15], [0.26, -0.15], [-0.26, 0.15], [0.26, 0.15]]) {
+      const post = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.28, 8), dark);
+      post.position.set(x, 0.38, z);
+      const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.04, 20), dark);
+      wheel.rotation.x = Math.PI / 2;
+      wheel.position.set(x * 0.85, 0.07, z * 1.08);
+      spin.add(post, wheel);
+    }
+    for (const x of [-0.12, 0.1]) {
+      const seat = new THREE.Mesh(new RoundedBoxGeometry(0.14, 0.12, 0.28, 3, 0.03), dark);
+      seat.position.set(x, 0.3, 0);
+      spin.add(seat);
+    }
+  } else if (kind === "bridge") {
+    const left = new THREE.Mesh(new RoundedBoxGeometry(0.24, 0.24, 0.24, 4, 0.05), cream);
+    left.position.set(-0.3, 0.3, 0);
+    const right = new THREE.Mesh(new RoundedBoxGeometry(0.24, 0.24, 0.24, 4, 0.05), glow);
+    right.position.set(0.3, 0.3, 0);
+    const tube = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.36, 12), dark);
+    tube.rotation.z = Math.PI / 2;
+    tube.position.y = 0.3;
+    const packet = new THREE.Mesh(new THREE.SphereGeometry(0.03, 16, 12), glow);
+    packet.position.y = 0.3;
+    spin.add(left, right, tube, packet);
+    animate = (time) => { packet.position.x = -0.18 + ((time * 0.45) % 1) * 0.36; };
+  } else if (kind === "scan") {
+    const placeholder = new THREE.Mesh(new THREE.IcosahedronGeometry(0.3, 1), new THREE.MeshBasicMaterial({ color: SIGNAL, wireframe: true }));
+    placeholder.position.y = 0.35;
+    spin.add(placeholder);
+    new GLTFLoader().load("../models/310.glb", (gltf) => {
+      fitModel(gltf.scene, 0.85);
+      spin.remove(placeholder);
+      spin.add(gltf.scene);
+    }, undefined, () => {});
+  } else if (kind === "headset") {
+    const mini = buildHeadset();
+    mini.group.scale.setScalar(1.05);
+    mini.group.position.y = 0.35;
+    mini.lensMat.emissiveIntensity = 1.2;
+    spin.add(mini.group);
+    animate = (time) => { mini.group.position.y = 0.35 + (reduceMotion ? 0 : Math.sin(time * 1.5) * 0.03); };
+  } else if (kind === "target") {
+    const face = new THREE.Group();
+    [[0.3, 0xefe8d8], [0.24, 0x1d1e1b], [0.18, 0x3d7ea6], [0.12, 0xc0392b], [0.06, 0xf4d03f]].forEach(([r, color], i) => {
+      const ring = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 0.03 + i * 0.004, 48), new THREE.MeshStandardMaterial({ color, roughness: 0.7 }));
+      face.add(ring);
+    });
+    face.rotation.x = Math.PI / 2;
+    face.position.y = 0.42;
+    const legL = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.5, 8), dark);
+    legL.position.set(-0.14, 0.2, -0.06);
+    legL.rotation.z = 0.25;
+    const legR = legL.clone();
+    legR.position.x = 0.14;
+    legR.rotation.z = -0.25;
+    const arrow = new THREE.Group();
+    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.34, 8), cream);
+    shaft.rotation.x = Math.PI / 2;
+    const fletch = new THREE.Mesh(new THREE.ConeGeometry(0.02, 0.06, 4), glow);
+    fletch.rotation.x = -Math.PI / 2;
+    fletch.position.z = 0.17;
+    arrow.add(shaft, fletch);
+    arrow.position.set(0.03, 0.44, 0.17);
+    arrow.rotation.set(0.12, 0.15, 0);
+    spin.add(face, legL, legR, arrow);
+  } else if (kind === "database") {
+    for (let i = 0; i < 3; i += 1) {
+      const disk = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.14, 40), i === 1 ? cream : dark);
+      disk.position.y = 0.1 + i * 0.17;
+      const band = new THREE.Mesh(new THREE.TorusGeometry(0.222, 0.006, 8, 48), glow);
+      band.rotation.x = Math.PI / 2;
+      band.position.y = disk.position.y + 0.07;
+      spin.add(disk, band);
+    }
+  }
+
+  spin.traverse((obj) => { if (obj.isMesh) obj.castShadow = true; });
+  return {
+    animate: (time, dt) => {
+      if (!reduceMotion) spin.rotation.y += dt * 0.35;
+      animate(time, dt);
+    }
+  };
 }
 
 const LOOK = new THREE.Vector3();
-const LAB_CAM = new THREE.Vector3(0, 4.4, 7.6);
-const LAB_TARGET = new THREE.Vector3(0, 0.9, 0);
+const REC_CAM = new THREE.Vector3();
+const REC_LOOK = new THREE.Vector3();
+let recIndex = -1;
 let yaw = 0;
 let yawReady = false;
 
@@ -992,21 +1173,34 @@ function updateVR(p, time, dt) {
   const pitch = lerp(0.35, 0, spawn);
   tmpA.set(-Math.sin(yaw), Math.sin(pitch), -Math.cos(yaw));
 
-  const lab = smooth(range(p, P.labStart, P.labStart + 0.055));
-  camera.position.lerpVectors(eye, LAB_CAM, lab);
-  tmpB.copy(eye).addScaledVector(tmpA, 4);
-  LOOK.lerpVectors(tmpB, LAB_TARGET, lab);
+  const lab = smooth(range(p, P.labStart, P.recStart));
+  const rn = RECORD.length;
+  const rx = range(p, P.recStart, P.recEnd) * (rn - 1);
+  const rBase = Math.floor(rx);
+  const rEased = Math.min(rn - 1, rBase + smooth(range(rx - rBase, 0.3, 0.7)));
+  const recAngle = vr.pedestals[0].angle + rEased * REC_SPACING;
+  tmpC.set(Math.sin(recAngle), 0, -Math.cos(recAngle));
+  REC_CAM.set(0, 1.45, 0).addScaledVector(tmpC, -0.45);
+  REC_LOOK.set(0, 0.62, 0).addScaledVector(tmpC, REC_RADIUS);
   if (p > P.labEnd) {
     const drift = range(p, P.labEnd, P.exitSwitch);
-    camera.position.z += drift * 1.2;
-    camera.position.y += drift * 0.6;
+    REC_CAM.addScaledVector(tmpC, -drift * 1.2);
+    REC_CAM.y += drift * 0.8;
   }
+
+  camera.position.lerpVectors(eye, REC_CAM, lab);
+  tmpB.copy(eye).addScaledVector(tmpA, 4);
+  LOOK.lerpVectors(tmpB, REC_LOOK, lab);
   camera.lookAt(LOOK);
 
-  const rise = smooth(range(p, P.labStart + 0.01, P.labStart + 0.06));
-  vr.pedestal.position.y = lerp(-3, 0, rise);
-  if (!reduceMotion) vr.exhibit.rotation.y += dt * 0.35;
-  vr.scanLine.position.y = 0.35 + (reduceMotion ? 0.6 : (Math.sin(time * 1.6) * 0.5 + 0.5) * 1.2);
+  const scan = reduceMotion ? 0.5 : Math.sin(time * 1.6) * 0.5 + 0.5;
+  vr.pedestals.forEach((pedestal, i) => {
+    const rise = smooth(range(p, P.labStart + i * 0.003, P.labStart + 0.014 + i * 0.003));
+    pedestal.group.position.y = lerp(-3, 0, rise);
+    if (rise > 0) pedestal.animate(time, dt);
+    pedestal.scanLine.position.y = 0.32 + scan * 0.8;
+  });
+  vr.panels.forEach((panel) => { panel.front.material.opacity = 1 - lab * 0.7; });
 
   if (!reduceMotion) vr.dust.rotation.y += dt * 0.01;
 
@@ -1035,9 +1229,46 @@ function updateVR(p, time, dt) {
     setPhase(`Projects ${pad(current + 1)} / ${pad(n)}`);
     if (current !== activeIndex) setActive(current);
   } else {
-    setPhase("Record");
+    const r = Math.round(rEased);
+    setPhase(`Record ${pad(r + 1)} / ${pad(rn)}`);
+    if (r !== recIndex) setRecord(r);
   }
 }
+
+const recHud = {
+  index: document.getElementById("rec-index"),
+  time: document.getElementById("rec-time"),
+  title: document.getElementById("rec-title"),
+  org: document.getElementById("rec-org"),
+  line: document.getElementById("rec-line"),
+  pins: document.getElementById("rec-pins")
+};
+
+recHud.pins.replaceChildren(...RECORD.map((entry, i) => {
+  const pin = document.createElement("button");
+  pin.type = "button";
+  pin.textContent = entry.pin;
+  pin.setAttribute("aria-label", `${entry.title}, ${entry.org}`);
+  pin.addEventListener("click", () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const at = P.recStart + (i / (RECORD.length - 1)) * (P.recEnd - P.recStart);
+    window.scrollTo({ top: at * max, behavior: reduceMotion ? "auto" : "smooth" });
+  });
+  return pin;
+}));
+
+function setRecord(i) {
+  recIndex = i;
+  const entry = RECORD[i];
+  recHud.index.textContent = `Record · ${pad(i + 1)} / ${pad(RECORD.length)}`;
+  recHud.time.textContent = entry.time;
+  recHud.title.textContent = entry.title;
+  recHud.org.textContent = entry.org;
+  recHud.line.textContent = entry.line;
+  Array.from(recHud.pins.children).forEach((pin, k) => pin.classList.toggle("is-on", k === i));
+}
+
+setRecord(0);
 
 function setActive(i) {
   activeIndex = i;

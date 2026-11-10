@@ -30,7 +30,7 @@ a { color: inherit; }
   display: block;
 }
 
-.track { height: 1300vh; }
+.track { height: 1400vh; }
 
 .fade {
   position: fixed;
@@ -269,7 +269,7 @@ h1, h2 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.03em; m
   white-space: nowrap;
 }
 
-.hud-card, .record-card, .dialog {
+.hud-card, .dialog {
   border: 1px solid var(--line);
   border-radius: 22px;
   background: var(--glass);
@@ -304,33 +304,54 @@ h1, h2 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.03em; m
 
 .beat-record {
   display: flex;
+  flex-direction: column;
   justify-content: flex-end;
-  align-items: center;
+  align-items: flex-start;
+  padding-bottom: 5vh;
 }
 
-.record-card {
-  width: min(460px, 100%);
-  max-height: calc(100vh - 150px);
-  overflow: auto;
-  padding: 22px 24px;
+.record-hud h2 { font-size: clamp(1.5rem, 2.6vw, 2rem); }
+
+.rec-time {
+  margin: 0 0 6px;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.82rem;
 }
 
-.record-card h2 { font-size: clamp(1.7rem, 3vw, 2.3rem); margin-bottom: 14px; }
-
-.record { margin: 0; padding: 0; list-style: none; }
-
-.record li {
-  display: grid;
-  gap: 2px;
-  padding: 10px 0;
-  border-top: 1px solid rgba(243, 239, 228, 0.1);
+.rec-pins {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 16px;
 }
 
-.record time { color: var(--signal); font-family: var(--mono); font-size: 0.75rem; }
+.rec-pins button {
+  padding: 5px 10px;
+  border: 1px solid rgba(243, 239, 228, 0.2);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: 500 0.72rem var(--mono);
+  cursor: pointer;
+}
 
-.record span { color: var(--muted); font-size: 0.9rem; }
+.rec-pins button:hover { border-color: var(--signal); color: var(--ink); }
 
-.record-note { margin: 14px 0 0; color: var(--muted); font-size: 0.88rem; line-height: 1.5; }
+.rec-pins button.is-on { border-color: var(--signal); background: var(--signal); color: var(--signal-ink); }
+
+.rec-note {
+  position: absolute;
+  right: clamp(16px, 5vw, 64px);
+  bottom: 5vh;
+  max-width: 280px;
+  margin: 0;
+  color: var(--faint);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  line-height: 1.6;
+  text-align: right;
+}
 
 .beat-fun {
   display: flex;
@@ -508,8 +529,7 @@ body.is-hovering-panel { cursor: pointer; }
   .jumps { justify-content: flex-start; }
   .beat { padding-top: 150px; }
   .ring-hint { top: 150px; white-space: normal; text-align: center; width: 90vw; }
-  .beat-record { align-items: flex-end; }
-  .record-card { max-height: 58vh; }
+  .rec-note { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
