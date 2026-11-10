@@ -30,8 +30,8 @@
     <nav class="jumps" aria-label="Jump to">
       <button type="button" data-jump="0.30">Projects</button>
       <button type="button" data-jump="0.79">Record</button>
+      <button type="button" data-jump="0.93">Off the clock</button>
       <button type="button" data-jump="1">Contact</button>
-      <a href="../index.html">Simple version</a>
     </nav>
     <div class="progress" aria-hidden="true"><span id="progress-bar"></span></div>
     <p class="phase" id="phase" aria-live="polite">Desk</p>
@@ -41,8 +41,7 @@
     <section class="beat beat-intro" data-from="0" data-to="0.085">
       <p class="eyebrow">Portfolio · headset edition</p>
       <h1>Daman Ahuja</h1>
-      <p class="lede">I build XR products, and lately the software behind an airport’s buggy fleet. This version of my portfolio is a headset. Scroll to pick it up and put it on.</p>
-      <p class="aside">Prefer a normal page? <a href="../index.html">Open the simple version</a>.</p>
+      <p class="lede">I build XR products, and lately the software behind an airport’s buggy fleet. This portfolio is a headset. Scroll to pick it up and put it on.</p>
       <p class="scroll-hint" aria-hidden="true"><span></span>Scroll</p>
     </section>
 
@@ -71,7 +70,7 @@
       </article>
     </section>
 
-    <section class="beat beat-record" data-from="0.78" data-to="0.865">
+    <section class="beat beat-record" data-from="0.78" data-to="0.85">
       <article class="record-card">
         <p class="eyebrow">Record</p>
         <h2>Where the time went</h2>
@@ -87,8 +86,19 @@
       </article>
     </section>
 
-    <section class="beat beat-exit" data-from="0.915" data-to="1.01">
-      <p class="eyebrow">Headset off</p>
+    <section class="beat beat-fun" data-from="0.905" data-to="0.955">
+      <article class="fun-card">
+        <p class="eyebrow">Off the clock</p>
+        <h2>Headset off. This is the rest of the desk.</h2>
+        <p class="fun-hint">Click the headphones, the controller, or the globe. The lamp works too.</p>
+      </article>
+      <button type="button" class="fun-tag" data-fun="music">Music</button>
+      <button type="button" class="fun-tag" data-fun="games">Games</button>
+      <button type="button" class="fun-tag" data-fun="travel">Travel</button>
+    </section>
+
+    <section class="beat beat-exit" data-from="0.965" data-to="1.01">
+      <p class="eyebrow">Contact</p>
       <h2>That’s the tour.</h2>
       <p class="lede">If you are building something in XR, at an airport, or anywhere a prototype has to become a product, write to me.</p>
       <div class="exit-actions">
@@ -103,7 +113,6 @@
         <li><a href="../Resumes/Daman_Ahuja_AI_ML.pdf">AI / ML resume</a></li>
         <li><a href="../Resumes/Daman_Ahuja_Product_Manager.pdf">Product resume</a></li>
       </ul>
-      <p class="aside"><a href="../index.html">Back to the simple version</a></p>
     </section>
   </div>
 
@@ -126,7 +135,7 @@
     <p class="eyebrow">Headset edition</p>
     <h2 id="fallback-title">The 3D scene did not start.</h2>
     <p id="fallback-body">Your browser could not load the headset scene.</p>
-    <a class="button" href="../index.html">Open the simple version</a>
+    <a class="button" href="mailto:damanahuja09@gmail.com">damanahuja09@gmail.com</a>
   </div>
 
   <script>
@@ -138,7 +147,7 @@
         : "The 3D scene did not start.";
       document.getElementById("fallback-body").textContent = fromDisk
         ? "Browsers block 3D scripts on pages opened straight from a folder. Publish the site, or run a local server in the Portfolio folder (for example: python -m http.server) and open localhost:8000/headset/."
-        : "Your browser could not load the 3D libraries. The simple version has everything in it.";
+        : "Your browser could not load the 3D libraries. Try a recent Chrome, Edge, or Firefox, or write to me directly.";
       document.getElementById("fallback").hidden = false;
     }, 5000);
   </script>

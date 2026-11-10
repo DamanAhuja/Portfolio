@@ -30,7 +30,7 @@ a { color: inherit; }
   display: block;
 }
 
-.track { height: 1100vh; }
+.track { height: 1300vh; }
 
 .fade {
   position: fixed;
@@ -331,6 +331,63 @@ h1, h2 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.03em; m
 .record span { color: var(--muted); font-size: 0.9rem; }
 
 .record-note { margin: 14px 0 0; color: var(--muted); font-size: 0.88rem; line-height: 1.5; }
+
+.fun-card {
+  width: min(400px, 100%);
+  padding: 20px 22px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--glass);
+  backdrop-filter: blur(14px);
+}
+
+.fun-card h2 { font-size: clamp(1.6rem, 2.8vw, 2.2rem); line-height: 1.05; }
+
+.fun-hint { margin: 12px 0 0; color: var(--muted); line-height: 1.5; }
+
+.fun-tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 8px 14px;
+  border: 1px solid var(--signal);
+  border-radius: 999px;
+  background: rgba(10, 13, 8, 0.82);
+  color: var(--ink);
+  font: 500 0.8rem var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  will-change: transform;
+}
+
+.fun-tag::after { content: " ↗"; color: var(--signal); }
+
+.fun-tag:hover, .fun-tag.is-hot { background: var(--signal); color: var(--signal-ink); }
+
+.fun-tag:hover::after, .fun-tag.is-hot::after { color: var(--signal-ink); }
+
+.fun-list {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fun-list li {
+  padding: 10px 14px;
+  border: 1px solid rgba(243, 239, 228, 0.12);
+  border-radius: 12px;
+  background: rgba(243, 239, 228, 0.04);
+}
+
+.fun-list li small { display: block; color: var(--faint); font-family: var(--mono); font-size: 0.72rem; }
+
+.dialog-media[hidden] { display: none; }
+
+.dialog-media.is-embed { aspect-ratio: auto; height: 352px; }
 
 .beat-exit {
   display: flex;

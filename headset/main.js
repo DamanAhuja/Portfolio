@@ -117,13 +117,48 @@ const PROJECTS = [
   }
 ];
 
+const FUN = {
+  music: {
+    kicker: "Off the clock · Music",
+    title: "On repeat",
+    intro: "What plays while the build runs.",
+    spotify: "",
+    items: [
+      { name: "Artist or song", note: "add your pick" },
+      { name: "Artist or song", note: "add your pick" },
+      { name: "Artist or song", note: "add your pick" }
+    ]
+  },
+  games: {
+    kicker: "Off the clock · Games",
+    title: "Currently playing",
+    intro: "What I play when I’m not building them.",
+    items: [
+      { name: "Game title", note: "add why you love it" },
+      { name: "Game title", note: "add why you love it" },
+      { name: "Game title", note: "add why you love it" }
+    ]
+  },
+  travel: {
+    kicker: "Off the clock · Travel",
+    title: "Pins on the globe",
+    intro: "Places I’ve been, and the next one on the list.",
+    items: [
+      { name: "Place", note: "add a year or a memory" },
+      { name: "Place", note: "add a year or a memory" },
+      { name: "Next up: place", note: "where you want to go" }
+    ]
+  }
+};
+
 const P = {
   ringStart: 0.3,
   ringEnd: 0.74,
   labStart: 0.745,
   labEnd: 0.84,
   roomSwitch: 0.24,
-  exitSwitch: 0.89
+  exitSwitch: 0.877,
+  funEnd: 0.955
 };
 
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
@@ -153,7 +188,7 @@ let renderer;
 try {
   renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 } catch (error) {
-  showFallback("This browser has WebGL turned off.", "The headset scene needs WebGL. The simple version has everything in it.");
+  showFallback("This browser has WebGL turned off.", "The headset scene needs WebGL. Turn on hardware acceleration, or write to me directly.");
   throw error;
 }
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
@@ -188,6 +223,8 @@ let progress = 0;
 let activeIndex = -1;
 let hovered = null;
 let lastPhase = "";
+let hoveredProp = null;
+const funTags = Array.from(document.querySelectorAll("[data-fun]"));
 const pointer = new THREE.Vector2(-10, -10);
 const raycaster = new THREE.Raycaster();
 const clock = new THREE.Clock();
@@ -220,6 +257,12 @@ window.addEventListener("pointermove", (event) => {
 
 canvas.addEventListener("click", () => {
   if (hovered !== null) openProject(hovered);
+  else if (hoveredProp === "lamp") toggleLamp();
+  else if (hoveredProp) openFun(hoveredProp);
+});
+
+funTags.forEach((tag) => {
+  tag.addEventListener("click", () => openFun(tag.dataset.fun));
 });
 
 hud.open.addEventListener("click", () => {
@@ -240,17 +283,19 @@ function frame() {
   progressBar.style.width = `${(p * 100).toFixed(2)}%`;
   updateBeats(p);
 
-  fade.style.opacity = Math.max(band(p, 0.19, 0.225, 0.255, 0.3), band(p, 0.855, 0.885, 0.895, 0.93)).toFixed(3);
+  fade.style.opacity = Math.max(band(p, 0.19, 0.225, 0.255, 0.3), band(p, 0.85, 0.872, 0.882, 0.9)).toFixed(3);
   vignette.style.opacity = (range(p, 0.12, 0.2) * (p < P.roomSwitch ? 1 : 0)).toFixed(3);
 
   if (p < P.roomSwitch || p >= P.exitSwitch) {
     setFov(42);
-    updateRoom(p, time);
-    renderer.render(room.scene, camera);
-    setPhase(p < P.roomSwitch ? (p < 0.09 ? "Desk" : "Putting it on") : "Headset off");
-    canvas.style.cursor = "";
     hovered = null;
+    updateRoom(p, time, dt);
+    renderer.render(room.scene, camera);
+    setPhase(p < P.roomSwitch ? (p < 0.09 ? "Desk" : "Putting it on") : p < P.funEnd + 0.005 ? "Off the clock" : "Contact");
+    canvas.style.cursor = hoveredProp ? "pointer" : "";
   } else {
+    hoveredProp = null;
+    funTags.forEach((tag) => tag.classList.remove("is-hot"));
     setFov(window.innerWidth < window.innerHeight ? 72 : 55);
     updateVR(p, time, dt);
     renderer.render(vr.scene, camera);
@@ -357,7 +402,151 @@ function buildRoom() {
   const headset = buildHeadset();
   scene.add(headset.group);
 
-  return { scene, headset };
+  const headphones = buildHeadphones();
+  headphones.position.set(0.98, 0.9, 0.02);
+  headphones.rotation.y = -0.55;
+  const controller = buildController();
+  controller.position.set(0.42, 0.9, 0.16);
+  controller.rotation.y = 0.35;
+  const globe = buildGlobe();
+  globe.group.position.set(-0.42, 0.9, -0.62);
+  scene.add(headphones, controller, globe.group);
+
+  const lampHit = new THREE.Mesh(new THREE.SphereGeometry(0.16, 12, 12), new THREE.MeshBasicMaterial({ visible: false }));
+  lampHit.position.copy(lampHead.position);
+  scene.add(lampHit);
+
+  const props = [
+    { key: "music", group: headphones, hit: headphones, anchor: new THREE.Vector3(0.98, 1.22, 0.02) },
+    { key: "games", group: controller, hit: controller, anchor: new THREE.Vector3(0.42, 1.02, 0.16) },
+    { key: "travel", group: globe.group, hit: globe.group, anchor: new THREE.Vector3(-0.42, 1.25, -0.62) },
+    { key: "lamp", group: null, hit: lampHit, anchor: null }
+  ];
+  props.forEach((prop) => {
+    prop.hit.traverse((obj) => { obj.userData.prop = prop.key; });
+  });
+
+  return { scene, headset, props, globe, lamp, bulb, lampOn: true };
+}
+
+function buildHeadphones() {
+  const group = new THREE.Group();
+  const shell = new THREE.MeshStandardMaterial({ color: 0x1f2124, roughness: 0.45, metalness: 0.3 });
+  const cushion = new THREE.MeshStandardMaterial({ color: 0x3a3b36, roughness: 1 });
+  const accent = new THREE.MeshStandardMaterial({ color: SIGNAL, roughness: 0.4, emissive: SIGNAL, emissiveIntensity: 0.15 });
+
+  const bandArc = new THREE.Mesh(new THREE.TorusGeometry(0.115, 0.013, 12, 48, Math.PI), shell);
+  bandArc.position.y = 0.075;
+  const padArc = new THREE.Mesh(new THREE.TorusGeometry(0.103, 0.01, 10, 32, Math.PI * 0.5), cushion);
+  padArc.position.y = 0.075;
+  padArc.rotation.z = Math.PI * 0.25;
+  group.add(bandArc, padArc);
+
+  for (const side of [-1, 1]) {
+    const cup = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.035, 32), shell);
+    cup.rotation.z = Math.PI / 2;
+    cup.position.set(side * 0.112, 0.05, 0);
+    const pad = new THREE.Mesh(new THREE.CylinderGeometry(0.046, 0.046, 0.018, 32), cushion);
+    pad.rotation.z = Math.PI / 2;
+    pad.position.set(side * 0.088, 0.05, 0);
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.04, 0.004, 8, 32), accent);
+    ring.rotation.y = Math.PI / 2;
+    ring.position.set(side * 0.131, 0.05, 0);
+    group.add(cup, pad, ring);
+  }
+  group.traverse((obj) => { if (obj.isMesh) obj.castShadow = true; });
+  return group;
+}
+
+function buildController() {
+  const group = new THREE.Group();
+  const body = new THREE.MeshStandardMaterial({ color: 0xefe8d8, roughness: 0.5 });
+  const dark = new THREE.MeshStandardMaterial({ color: 0x1d1e1b, roughness: 0.5 });
+
+  const core = new THREE.Mesh(new RoundedBoxGeometry(0.17, 0.032, 0.085, 4, 0.014), body);
+  core.position.y = 0.022;
+  group.add(core);
+  for (const side of [-1, 1]) {
+    const grip = new THREE.Mesh(new THREE.CapsuleGeometry(0.026, 0.04, 6, 16), body);
+    grip.rotation.x = Math.PI / 2;
+    grip.rotation.y = side * 0.5;
+    grip.position.set(side * 0.07, 0.02, 0.035);
+    const stick = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.013, 0.014, 20), dark);
+    stick.position.set(side * 0.028, 0.044, 0.02);
+    group.add(grip, stick);
+  }
+  const dpadA = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.006, 0.01), dark);
+  const dpadB = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.006, 0.03), dark);
+  dpadA.position.set(-0.058, 0.04, -0.012);
+  dpadB.position.copy(dpadA.position);
+  group.add(dpadA, dpadB);
+  const colors = [SIGNAL, 0xff6b6b, 0x5ac8fa, 0xffd166];
+  [[0.058, -0.024], [0.072, -0.01], [0.044, -0.01], [0.058, 0.004]].forEach(([x, z], i) => {
+    const button = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.0065, 0.0065, 0.006, 16),
+      new THREE.MeshStandardMaterial({ color: colors[i], emissive: colors[i], emissiveIntensity: 0.25 })
+    );
+    button.position.set(x, 0.04, z);
+    group.add(button);
+  });
+  group.traverse((obj) => { if (obj.isMesh) obj.castShadow = true; });
+  return group;
+}
+
+function buildGlobe() {
+  const group = new THREE.Group();
+  const metal = new THREE.MeshStandardMaterial({ color: 0x2a2b27, roughness: 0.4, metalness: 0.6 });
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.075, 0.02, 32), metal);
+  base.position.y = 0.01;
+  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.08, 12), metal);
+  post.position.y = 0.055;
+  group.add(base, post);
+
+  const tilt = new THREE.Group();
+  tilt.position.y = 0.2;
+  tilt.rotation.z = 0.41;
+  const meridian = new THREE.Mesh(new THREE.TorusGeometry(0.118, 0.005, 8, 64, Math.PI * 1.2), metal);
+  meridian.rotation.z = -Math.PI * 0.1;
+  tilt.add(meridian);
+
+  const globeCanvas = document.createElement("canvas");
+  globeCanvas.width = 1024;
+  globeCanvas.height = 512;
+  const ctx = globeCanvas.getContext("2d");
+  ctx.fillStyle = "#10261f";
+  ctx.fillRect(0, 0, 1024, 512);
+  ctx.fillStyle = "#3b6b4f";
+  for (const [x, y, rx, ry] of [[250, 170, 120, 80], [300, 330, 60, 110], [540, 150, 150, 70], [560, 300, 70, 100], [760, 180, 140, 90], [830, 370, 60, 40]]) {
+    ctx.beginPath();
+    ctx.ellipse(x, y, rx, ry, 0.3, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.strokeStyle = "rgba(214,255,74,0.35)";
+  ctx.lineWidth = 2;
+  for (let x = 0; x <= 1024; x += 64) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 512); ctx.stroke(); }
+  for (let y = 0; y <= 512; y += 64) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(1024, y); ctx.stroke(); }
+  ctx.fillStyle = SIGNAL_CSS;
+  for (const [x, y] of [[730, 215], [745, 235], [560, 150], [280, 180], [820, 360]]) {
+    ctx.beginPath();
+    ctx.arc(x, y, 9, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  const texture = new THREE.CanvasTexture(globeCanvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  const sphere = new THREE.Mesh(
+    new THREE.SphereGeometry(0.105, 48, 32),
+    new THREE.MeshStandardMaterial({ map: texture, roughness: 0.55, emissive: 0xffffff, emissiveMap: texture, emissiveIntensity: 0.15 })
+  );
+  tilt.add(sphere);
+  group.add(tilt);
+  group.traverse((obj) => { if (obj.isMesh) obj.castShadow = true; });
+  return { group, sphere };
+}
+
+function toggleLamp() {
+  room.lampOn = !room.lampOn;
+  room.lamp.intensity = room.lampOn ? 28 : 0;
+  room.bulb.material.color.set(room.lampOn ? 0xffe2b0 : 0x3a3428);
 }
 
 function buildLaptop() {
@@ -381,8 +570,9 @@ function buildLaptop() {
   ctx.fillText("Daman Ahuja", 58, 50);
   ctx.fillStyle = "#b7b1a3";
   ctx.font = "20px monospace";
-  ctx.fillText("index.html · the simple version", 28, 110);
-  ctx.fillText("you are in the fancy one", 28, 144);
+  ctx.fillText("$ git commit -m \"one last thing\"", 28, 110);
+  ctx.fillStyle = SIGNAL_CSS;
+  ctx.fillText("build passing ✓", 28, 144);
   const screenTex = new THREE.CanvasTexture(screenCanvas);
   screenTex.colorSpace = THREE.SRGBColorSpace;
 
@@ -460,8 +650,14 @@ const CAM_EXIT = new THREE.Vector3(-0.35, 1.55, 2.4);
 const tmpA = new THREE.Vector3();
 const tmpB = new THREE.Vector3();
 
-function updateRoom(p, time) {
+const CAM_FUN = new THREE.Vector3(0.38, 1.52, 1.5);
+const FUN_LOOK = new THREE.Vector3(0.3, 0.98, -0.2);
+const EXIT_LOOK = new THREE.Vector3(0.2, 1.0, -0.3);
+const tmpC = new THREE.Vector3();
+
+function updateRoom(p, time, dt) {
   const { group, lensMat } = room.headset;
+  if (!reduceMotion) room.globe.sphere.rotation.y += dt * (hoveredProp === "travel" ? 1.4 : 0.25);
   if (p < P.roomSwitch) {
     const lift = smooth(range(p, 0.03, 0.2));
     const turn = smooth(range(p, 0.05, 0.2));
@@ -478,10 +674,45 @@ function updateRoom(p, time) {
     group.position.copy(H_REST);
     group.rotation.set(-0.04, 0.6, 0.05);
     lensMat.emissiveIntensity = 0.1;
-    const drift = reduceMotion ? 0 : Math.sin(time * 0.3) * 0.08;
-    camera.position.set(CAM_EXIT.x + drift, CAM_EXIT.y, CAM_EXIT.z);
-    camera.lookAt(0.2, 1.0, -0.3);
+    const drift = reduceMotion ? 0 : Math.sin(time * 0.3) * 0.06;
+    const leave = smooth(range(p, P.funEnd, P.funEnd + 0.015));
+    camera.position.lerpVectors(CAM_FUN, CAM_EXIT, leave);
+    camera.position.x += drift;
+    tmpC.lerpVectors(FUN_LOOK, EXIT_LOOK, leave);
+    camera.lookAt(tmpC);
+    camera.updateMatrixWorld();
+    updateProps(p, time);
   }
+}
+
+function updateProps(p, time) {
+  const active = p > P.exitSwitch + 0.02 && p < P.funEnd + 0.004;
+  let hit = null;
+  if (active) {
+    raycaster.setFromCamera(pointer, camera);
+    const hits = raycaster.intersectObjects(room.props.map((prop) => prop.hit), true);
+    if (hits.length) hit = hits[0].object.userData.prop || null;
+  }
+  hoveredProp = hit;
+
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  room.props.forEach((prop, i) => {
+    if (prop.group) {
+      const s = prop.key === hit ? 1.12 : 1;
+      prop.group.scale.lerp(tmpB.set(s, s, s), 0.15);
+      if (prop.key === "games" && !reduceMotion) prop.group.position.y = 0.9 + (hit === "games" ? 0.03 + Math.sin(time * 6) * 0.006 : 0);
+    }
+    if (!prop.anchor) return;
+    const tag = funTags.find((el) => el.dataset.fun === prop.key);
+    if (!tag) return;
+    tmpC.copy(prop.anchor).project(camera);
+    const x = (tmpC.x * 0.5 + 0.5) * w;
+    const y = (-tmpC.y * 0.5 + 0.5) * h;
+    const bob = reduceMotion ? 0 : Math.sin(time * 1.6 + i) * 4;
+    tag.style.transform = `translate(${x.toFixed(1)}px, ${(y + bob).toFixed(1)}px) translate(-50%, -100%)`;
+    tag.classList.toggle("is-hot", prop.key === hit);
+  });
 }
 
 /* ---------- VR space ---------- */
@@ -917,7 +1148,47 @@ dialog.addEventListener("close", () => {
   dialogMedia.replaceChildren();
 });
 
+function openFun(key) {
+  const fun = FUN[key];
+  if (!fun) return;
+  document.getElementById("dialog-kicker").textContent = fun.kicker;
+  document.getElementById("dialog-title").textContent = fun.title;
+  document.getElementById("dialog-org").textContent = fun.intro;
+  document.getElementById("dialog-stack").textContent = "";
+  document.getElementById("dialog-links").replaceChildren();
+
+  const list = document.createElement("ul");
+  list.className = "fun-list";
+  list.replaceChildren(...fun.items.map((item) => {
+    const li = document.createElement("li");
+    li.textContent = item.name;
+    if (item.note) {
+      const note = document.createElement("small");
+      note.textContent = item.note;
+      li.appendChild(note);
+    }
+    return li;
+  }));
+  document.getElementById("dialog-body").replaceChildren(list);
+
+  if (fun.spotify) {
+    const frameEl = document.createElement("iframe");
+    frameEl.src = fun.spotify;
+    frameEl.title = "Spotify playlist";
+    frameEl.allow = "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";
+    frameEl.loading = "lazy";
+    dialogMedia.replaceChildren(frameEl);
+    dialogMedia.classList.add("is-embed");
+    dialogMedia.hidden = false;
+  } else {
+    dialogMedia.hidden = true;
+  }
+  dialog.showModal();
+}
+
 function openProject(i) {
+  dialogMedia.hidden = false;
+  dialogMedia.classList.remove("is-embed");
   const project = PROJECTS[i];
   document.getElementById("dialog-kicker").textContent = `${pad(i + 1)} / ${pad(PROJECTS.length)} · ${project.kind}`;
   document.getElementById("dialog-title").textContent = project.title;
