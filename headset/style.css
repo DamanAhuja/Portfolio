@@ -336,6 +336,11 @@ h1, h2 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.03em; m
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background: linear-gradient(90deg, rgba(13, 11, 8, 0.88) 0%, rgba(13, 11, 8, 0.55) 45%, transparent 75%);
+}
+
+@media (max-width: 720px) {
+  .beat-exit { background: rgba(13, 11, 8, 0.78); }
 }
 
 .beat-exit h2 { font-size: clamp(2.6rem, 7vw, 5.5rem); line-height: 0.95; }
