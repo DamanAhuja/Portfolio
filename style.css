@@ -66,7 +66,11 @@ img { max-width: 100%; display: block; }
 
 .hero-bg {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  height: 100lvh;
   z-index: -1;
   background: #d9c9cf url("hero.jpg") center 60% / cover no-repeat;
 }
@@ -74,7 +78,8 @@ img { max-width: 100%; display: block; }
 .hero {
   position: relative;
   height: 100vh;
-  min-height: 520px;
+  height: 100svh;
+  min-height: 480px;
 }
 
 .page {
@@ -419,6 +424,24 @@ img { max-width: 100%; display: block; }
   }
 
   .work-meta { margin-bottom: 18px; }
+
+  .topbar { padding-top: 16px; }
+
+  .nav { gap: 22px; padding-top: 14px; }
+
+  .works { padding-top: 64px; }
+
+  .section-title { margin-bottom: 56px; }
+
+  .work-more { columns: 1; margin-top: 28px; }
+
+  .contact { margin-top: 70px; }
+
+  .contact-mail { font-size: 1.35rem; overflow-wrap: anywhere; }
+
+  .about-page .about { padding-top: 130px; }
+
+  .timeline li { grid-template-columns: 70px 1fr; }
 
   .about-intro, .about-grid { grid-template-columns: 1fr; }
 

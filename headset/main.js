@@ -7,6 +7,7 @@ window.__headset = true;
 const SIGNAL = 0xd6ff4a;
 const SIGNAL_CSS = "#d6ff4a";
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
 
 const PROJECTS = [
   {
@@ -262,7 +263,7 @@ try {
   showFallback("This browser has WebGL turned off.", "The headset scene needs WebGL. Turn on hardware acceleration, or write to me directly.");
   throw error;
 }
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, coarsePointer ? 1.5 : 1.75));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -325,18 +326,36 @@ document.querySelectorAll("[data-jump]").forEach((el) => {
   });
 });
 
-window.addEventListener("pointermove", (event) => {
+function setPointer(event) {
   pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
   pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
-});
+}
 
-canvas.addEventListener("click", () => {
-  if (hovered !== null) openProject(hovered);
-  else if (hoveredProp === "lamp") toggleLamp();
-  else if (hoveredProp === "football" || hoveredProp === "cricket") kickBall(hoveredProp);
-  else if (hoveredProp === "laptop") room.props.find((prop) => prop.key === "laptop").group.userData.nextLine();
-  else if (hoveredProp === "headset") jumpTo(P.ringStart);
-  else if (hoveredProp) openFun(hoveredProp);
+const inRingRange = (p) => p >= P.ringStart - 0.01 && p <= P.ringEnd + 0.004;
+const propsActive = (p) => p < 0.04 || (p > P.exitSwitch + 0.02 && p < P.funEnd + 0.004);
+const inVR = (p) => p >= P.roomSwitch && p < P.exitSwitch;
+
+window.addEventListener("pointermove", setPointer);
+
+canvas.addEventListener("click", (event) => {
+  setPointer(event);
+  raycaster.setFromCamera(pointer, camera);
+  const p = progress;
+  if (inVR(p)) {
+    if (!inRingRange(p)) return;
+    const hits = raycaster.intersectObjects(vr.panels.map((panel) => panel.front), false);
+    if (hits.length) openProject(hits[0].object.userData.index);
+    return;
+  }
+  if (!propsActive(p)) return;
+  const hits = raycaster.intersectObjects(room.props.map((prop) => prop.hit), true);
+  const key = hits.length ? hits[0].object.userData.prop : nearestProp(event.clientX, event.clientY, 44);
+  if (!key) return;
+  if (key === "lamp") toggleLamp();
+  else if (key === "football" || key === "cricket") kickBall(key);
+  else if (key === "laptop") room.props.find((prop) => prop.key === "laptop").group.userData.nextLine();
+  else if (key === "headset") jumpTo(P.ringStart);
+  else openFun(key);
 });
 
 funTags.forEach((tag) => {
@@ -365,7 +384,7 @@ function frame() {
   vignette.style.opacity = (range(p, 0.12, 0.2) * (p < P.roomSwitch ? 1 : 0)).toFixed(3);
 
   if (p < P.roomSwitch || p >= P.exitSwitch) {
-    setFov(p < P.roomSwitch ? 42 : roomExitFov());
+    setFov(roomExitFov());
     hovered = null;
     updateRoom(p, time, dt);
     renderer.render(room.scene, camera);
@@ -384,7 +403,7 @@ function roomExitFov() {
   const aspect = window.innerWidth / window.innerHeight;
   if (aspect >= 1.6) return 42;
   const halfH = Math.atan(Math.tan(THREE.MathUtils.degToRad(21)) * 1.6);
-  return Math.round(Math.min(78, THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(halfH) / aspect))));
+  return Math.round(Math.min(72, THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(halfH) / aspect))));
 }
 
 function setFov(fov) {
@@ -899,6 +918,7 @@ function updateRoom(p, time, dt) {
     const leave = smooth(range(p, P.funEnd, P.funEnd + 0.015));
     camera.position.lerpVectors(CAM_FUN, CAM_EXIT, leave);
     camera.position.x += drift;
+    if (window.innerWidth < window.innerHeight) camera.position.add(tmpC.set(0.25, 0.35, 1.1).multiplyScalar(1 - leave));
     tmpC.lerpVectors(FUN_LOOK, EXIT_LOOK, leave);
     camera.lookAt(tmpC);
     camera.updateMatrixWorld();
@@ -906,11 +926,28 @@ function updateRoom(p, time, dt) {
   }
 }
 
+const propPoint = new THREE.Vector3();
+
+function nearestProp(x, y, radius) {
+  let best = null;
+  let bestDist = radius;
+  room.props.forEach((prop) => {
+    prop.hit.getWorldPosition(propPoint).project(camera);
+    if (propPoint.z > 1) return;
+    const sx = (propPoint.x * 0.5 + 0.5) * window.innerWidth;
+    const sy = (-propPoint.y * 0.5 + 0.5) * window.innerHeight;
+    const d = Math.hypot(sx - x, sy - y);
+    if (d < bestDist) {
+      bestDist = d;
+      best = prop.key;
+    }
+  });
+  return best;
+}
+
 function updateProps(p, time) {
-  const onCover = p < 0.04;
-  const active = onCover || (p > P.exitSwitch + 0.02 && p < P.funEnd + 0.004);
   let hit = null;
-  if (active) {
+  if (propsActive(p) && !coarsePointer) {
     raycaster.setFromCamera(pointer, camera);
     const hits = raycaster.intersectObjects(room.props.map((prop) => prop.hit), true);
     if (hits.length) hit = hits[0].object.userData.prop || null;
@@ -1175,7 +1212,7 @@ function updateVR(p, time, dt) {
   const recAngle = vr.pedestals[0].angle + rEased * REC_SPACING;
   tmpC.set(Math.sin(recAngle), 0, -Math.cos(recAngle));
   REC_CAM.set(0, 1.35, 0).addScaledVector(tmpC, 0.5);
-  REC_LOOK.set(0, 0.6, 0).addScaledVector(tmpC, REC_RADIUS);
+  REC_LOOK.set(0, window.innerWidth < window.innerHeight ? 0.05 : 0.6, 0).addScaledVector(tmpC, REC_RADIUS);
   if (p > P.labEnd) {
     const drift = range(p, P.labEnd, P.exitSwitch);
     REC_CAM.addScaledVector(tmpC, -drift * 1.2);
@@ -1198,9 +1235,9 @@ function updateVR(p, time, dt) {
 
   if (!reduceMotion) vr.dust.rotation.y += dt * 0.01;
 
-  const inRing = p >= P.ringStart - 0.01 && p <= P.ringEnd + 0.004;
+  const inRing = inRingRange(p);
   let hit = null;
-  if (inRing) {
+  if (inRing && !coarsePointer) {
     raycaster.setFromCamera(pointer, camera);
     const hits = raycaster.intersectObjects(vr.panels.map((panel) => panel.front), false);
     if (hits.length) hit = hits[0].object.userData.index;
@@ -1711,9 +1748,9 @@ function startKeepy(cv, scoreEl, bestEl) {
 }
 
 const PASS_ART = {
-  Mountains: `<svg viewBox="0 0 200 90" aria-hidden="true"><rect width="200" height="90" fill="#bcd3e6"/><circle cx="160" cy="24" r="12" fill="#fff6d8"/><path d="M0 90 L55 25 L85 60 L120 15 L200 90Z" fill="#4a6670"/><path d="M55 25 L66 38 L48 34Z M120 15 L134 32 L110 30Z" fill="#fff"/><path d="M0 90 L40 62 L80 90Z" fill="#2f4b3a"/></svg>`,
-  Beaches: `<svg viewBox="0 0 200 90" aria-hidden="true"><rect width="200" height="90" fill="#ffd9a8"/><circle cx="100" cy="52" r="20" fill="#ff8a5b"/><rect y="52" width="200" height="38" fill="#3d7ea6"/><path d="M0 64 Q25 58 50 64 T100 64 T150 64 T200 64 V90 H0Z" fill="#5ac8fa" opacity="0.6"/><path d="M0 80 Q40 70 80 80 T200 78 V90 H0Z" fill="#f2d49b"/></svg>`,
-  Deserts: `<svg viewBox="0 0 200 90" aria-hidden="true"><rect width="200" height="90" fill="#2b2545"/><circle cx="40" cy="20" r="1.5" fill="#fff"/><circle cx="90" cy="12" r="1" fill="#fff"/><circle cx="150" cy="26" r="1.5" fill="#fff"/><circle cx="120" cy="16" r="1" fill="#fff"/><path d="M178 14 a10 10 0 1 0 6 18 a8 8 0 1 1 -6 -18Z" fill="#fff6d8"/><path d="M0 70 Q50 45 100 68 T200 60 V90 H0Z" fill="#c98b4f"/><path d="M0 82 Q60 64 120 80 T200 76 V90 H0Z" fill="#a8663a"/></svg>`
+  Mountains: `<svg viewBox="0 0 200 90" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="200" height="90" fill="#bcd3e6"/><circle cx="160" cy="24" r="12" fill="#fff6d8"/><path d="M0 90 L55 25 L85 60 L120 15 L200 90Z" fill="#4a6670"/><path d="M55 25 L66 38 L48 34Z M120 15 L134 32 L110 30Z" fill="#fff"/><path d="M0 90 L40 62 L80 90Z" fill="#2f4b3a"/></svg>`,
+  Beaches: `<svg viewBox="0 0 200 90" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="200" height="90" fill="#ffd9a8"/><circle cx="100" cy="52" r="20" fill="#ff8a5b"/><rect y="52" width="200" height="38" fill="#3d7ea6"/><path d="M0 64 Q25 58 50 64 T100 64 T150 64 T200 64 V90 H0Z" fill="#5ac8fa" opacity="0.6"/><path d="M0 80 Q40 70 80 80 T200 78 V90 H0Z" fill="#f2d49b"/></svg>`,
+  Deserts: `<svg viewBox="0 0 200 90" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="200" height="90" fill="#2b2545"/><circle cx="40" cy="20" r="1.5" fill="#fff"/><circle cx="90" cy="12" r="1" fill="#fff"/><circle cx="150" cy="26" r="1.5" fill="#fff"/><circle cx="120" cy="16" r="1" fill="#fff"/><path d="M178 14 a10 10 0 1 0 6 18 a8 8 0 1 1 -6 -18Z" fill="#fff6d8"/><path d="M0 70 Q50 45 100 68 T200 60 V90 H0Z" fill="#c98b4f"/><path d="M0 82 Q60 64 120 80 T200 76 V90 H0Z" fill="#a8663a"/></svg>`
 };
 
 function renderTravel(body, fun) {
