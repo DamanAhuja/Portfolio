@@ -106,7 +106,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   animateFloor(reduceMotion);
-  rotateLog(reduceMotion);
 });
 
 function setupTabs({ list, onSelect }) {
@@ -188,23 +187,4 @@ function animateFloor(reduceMotion) {
     buggy.setAttribute("cx", point.x);
     buggy.setAttribute("cy", point.y);
   }
-}
-
-function rotateLog(reduceMotion) {
-  const log = document.querySelector(".floor-log");
-  if (!log) return;
-  const lines = [
-    "Buggy 18 · battery 64% · heartbeat fresh",
-    "Three riders pooled on one pier",
-    "Offer out · 12s driver countdown",
-    "Kiosk poll · ETA on the screen",
-    "Charging buggy left out of the list",
-    "Walk-up stays in the ride log"
-  ];
-  let index = 0;
-  const tick = () => {
-    index = (index + 1) % lines.length;
-    log.textContent = lines[index];
-  };
-  window.setInterval(tick, reduceMotion ? 8000 : 2800);
 }

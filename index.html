@@ -43,7 +43,7 @@
           <span class="live" aria-hidden="true"></span>
           Delhi University · now at IGI Airport
         </p>
-        <h1>Smart Buggy at Terminal 3. <em>XR products before that.</em></h1>
+        <h1>I build software that has to work outside the demo. <em>Airport dispatch now, XR before that.</em></h1>
         <p class="dek">
           I am a final-year computer science student. At GMR’s Smart Airport City I build the Android apps for Smart Buggy, the system that dispatches buggies to passengers with reduced mobility. I also integrate CRM tools into Carbon, an AI business OS at Tap4. From 2024 to 2025 I was founding CTO at XRVisionLabs.
         </p>
@@ -66,77 +66,6 @@
           B.Sc. Computer Science, 2027
         </figcaption>
       </figure>
-    </section>
-
-    <section class="floor-section reveal" aria-labelledby="floor-title">
-      <div class="floor-head">
-        <h2 id="floor-title">A sketch of the dispatch loop</h2>
-        <p>Illustration of the rules in the Smart Buggy build. The buggies on this floor are not a live airport feed.</p>
-      </div>
-
-      <div class="floor-layout">
-        <div class="floor-canvas">
-          <svg class="floor-svg" viewBox="0 0 920 500" role="img" aria-label="Illustrated two-level terminal floor with three buggies moving between gates">
-            <rect class="floor-bg" width="920" height="500" rx="28"></rect>
-            <text class="svg-label" x="36" y="40">T3 · TWO FLOORS · 109 GATES AND POINTS</text>
-            <text class="svg-label svg-label-right" x="884" y="40">ILLUSTRATION</text>
-
-            <g class="pier">
-              <rect x="32" y="68" width="856" height="160" rx="22"></rect>
-              <text class="svg-quiet" x="52" y="98">UPPER FLOOR</text>
-            </g>
-            <g class="pier">
-              <rect x="32" y="272" width="856" height="160" rx="22"></rect>
-              <text class="svg-quiet" x="52" y="302">LOWER FLOOR</text>
-            </g>
-            <rect class="spine" x="438" y="210" width="44" height="80" rx="8"></rect>
-
-            <g class="gates" fill="currentColor">
-              <rect x="78" y="78" width="18" height="8"></rect>
-              <rect x="148" y="78" width="18" height="8"></rect>
-              <rect x="218" y="78" width="18" height="8"></rect>
-              <rect x="288" y="78" width="18" height="8"></rect>
-              <rect x="358" y="78" width="18" height="8"></rect>
-              <rect x="500" y="78" width="18" height="8"></rect>
-              <rect x="570" y="78" width="18" height="8"></rect>
-              <rect x="640" y="78" width="18" height="8"></rect>
-              <rect x="710" y="78" width="18" height="8"></rect>
-              <rect x="780" y="78" width="18" height="8"></rect>
-              <rect x="78" y="410" width="18" height="8"></rect>
-              <rect x="148" y="410" width="18" height="8"></rect>
-              <rect x="218" y="410" width="18" height="8"></rect>
-              <rect x="288" y="410" width="18" height="8"></rect>
-              <rect x="358" y="410" width="18" height="8"></rect>
-              <rect x="500" y="410" width="18" height="8"></rect>
-              <rect x="570" y="410" width="18" height="8"></rect>
-              <rect x="640" y="410" width="18" height="8"></rect>
-              <rect x="710" y="410" width="18" height="8"></rect>
-              <rect x="780" y="410" width="18" height="8"></rect>
-            </g>
-
-            <path id="route-upper" class="route" d="M96 148 H824"></path>
-            <path id="route-lower" class="route" d="M824 352 H96"></path>
-            <path id="route-link" class="route" d="M150 148 H460 V352 H790"></path>
-
-            <circle class="buggy" data-route="route-upper" data-speed="0.00011" data-start="0.08" r="8"></circle>
-            <circle class="buggy" data-route="route-lower" data-speed="0.00008" data-start="0.42" r="8"></circle>
-            <circle class="buggy buggy-pool" data-route="route-link" data-speed="0.00007" data-start="0.2" r="9"></circle>
-          </svg>
-        </div>
-
-        <aside class="readout">
-          <p class="readout-kicker">Rules in the build</p>
-          <dl>
-            <div><dt>Position</dt><dd>MQTT every 1s</dd></div>
-            <div><dt>Heartbeat</dt><dd>under 15s</dd></div>
-            <div><dt>Battery</dt><dd>above 30%</dd></div>
-            <div><dt>Pooling</dt><dd>up to 5 seats</dd></div>
-            <div><dt>Offer</dt><dd>15s, then a 12s countdown</dd></div>
-            <div><dt>Kiosk</dt><dd>polls every 5s</dd></div>
-          </dl>
-          <p class="floor-log" aria-live="polite">Buggy on duty · battery above the cutoff · heartbeat fresh</p>
-        </aside>
-      </div>
     </section>
 
     <section id="work" class="section">
@@ -183,16 +112,38 @@
 
         <div class="stage">
           <article class="case is-active" id="case-buggy" role="tabpanel" aria-labelledby="tab-buggy">
-            <div class="case-media spec-media">
-              <p class="media-kicker">Four apps, one ride</p>
-              <ol class="flow">
-                <li>Kiosk request</li>
-                <li>Four-tier allocator</li>
-                <li>Driver offer</li>
-                <li>Board, start, drop</li>
-              </ol>
-              <p class="media-note">Passenger kiosk, driver tablet, dispatch engine, admin portal. Indoor position comes from BLE beacons on a surveyed floor of 109 gates and points.</p>
-            </div>
+            <figure class="case-media floor-media">
+              <figcaption>
+                <p class="media-kicker">How a ride gets dispatched</p>
+                <p class="media-note">A passenger books at a kiosk. The engine picks a buggy that is on duty, charged, and recently checked in, and pools riders going the same way. The moving dots stand in for buggies. This is a sketch of the rules, not a live feed.</p>
+              </figcaption>
+              <svg class="floor-svg" viewBox="0 0 920 420" role="img" aria-label="Sketch of two terminal floors with buggies moving between gates">
+                <rect class="floor-bg" width="920" height="420" rx="20"></rect>
+                <g class="pier">
+                  <rect x="24" y="24" width="872" height="150" rx="18"></rect>
+                  <text class="svg-quiet" x="44" y="52">UPPER FLOOR · GATES</text>
+                </g>
+                <g class="pier">
+                  <rect x="24" y="246" width="872" height="150" rx="18"></rect>
+                  <text class="svg-quiet" x="44" y="274">LOWER FLOOR · GATES</text>
+                </g>
+                <rect class="spine" x="438" y="162" width="44" height="96" rx="8"></rect>
+                <text class="svg-quiet" x="496" y="214">LIFT</text>
+
+                <path id="route-upper" class="route" d="M90 116 H830"></path>
+                <path id="route-lower" class="route" d="M830 338 H90"></path>
+                <path id="route-link" class="route" d="M150 116 H460 V338 H790"></path>
+
+                <circle class="buggy" data-route="route-upper" data-speed="0.00011" data-start="0.08" r="9"></circle>
+                <circle class="buggy" data-route="route-lower" data-speed="0.00008" data-start="0.42" r="9"></circle>
+                <circle class="buggy buggy-pool" data-route="route-link" data-speed="0.00007" data-start="0.2" r="10"></circle>
+              </svg>
+              <ul class="floor-legend">
+                <li><span class="dot"></span>Buggy</li>
+                <li><span class="dot dot-pool"></span>Pooled ride</li>
+                <li>109 gates and points across two floors</li>
+              </ul>
+            </figure>
             <div class="case-copy">
               <h3>Smart Buggy</h3>
               <p>The driver tablet and passenger kiosk are Kotlin and Jetpack Compose. The tablet publishes indoor position, battery, and seats over MQTT every second, and walks the trip through the Node.js engine. A buggy with a stale heartbeat, a low battery, or a charging state drops out of the pool. Riders headed to the same pier share a vehicle, up to five seats, before an idle buggy is called.</p>
