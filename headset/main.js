@@ -202,11 +202,48 @@ const FUN = {
   music: {
     kicker: "Off the clock · Music",
     title: "On repeat",
-    intro: "What plays while the build runs.",
+    intro: "Punjabi boy, West Delhi. This is what’s actually on.",
     artists: [
-      { name: "Seedhe Maut", color: "#d6ff4a" },
-      { name: "Nanku", color: "#ff8a5b" },
-      { name: "Eminem", color: "#5ac8fa" }
+      {
+        name: "Seedhe Maut",
+        who: "Encore ABJ & Calm",
+        track: "Nayaab",
+        line: "West Delhi bus, earphones in. This sounds like home.",
+        spotify: "2DjpIAVeu7LKhnem3KY07Q",
+        query: "Seedhe Maut Nayaab",
+        skin: "sm",
+        mark: "SM"
+      },
+      {
+        name: "Nanku",
+        who: "Delhi",
+        track: "Kamikaze",
+        line: "Same city, lighter day. Auto already knows the hook.",
+        spotify: "3lN9YvbrSxP8UjN3SeaVth",
+        query: "Nanku Kamikaze",
+        skin: "nanku",
+        mark: "NK"
+      },
+      {
+        name: "Eminem",
+        who: "Marshall Mathers",
+        track: "Stan",
+        line: "The long one. Notes app at 1am energy.",
+        spotify: "3UmaczJpikHgJFyBTAJVoz",
+        query: "Eminem Stan Dido",
+        skin: "em",
+        mark: "EM"
+      },
+      {
+        name: "Eminem",
+        who: "Marshall Mathers",
+        track: "Without Me",
+        line: "Hostel speaker. The whole room still knows this one.",
+        spotify: "7lQ8MOhq6IN2w8EYcFNSUk",
+        query: "Eminem Without Me",
+        skin: "em",
+        mark: "EM"
+      }
     ]
   },
   games: {
@@ -219,9 +256,9 @@ const FUN = {
     title: "Anywhere works",
     intro: "No list of places. Just pick a kind of place and I’m in.",
     passes: [
-      { name: "Mountains", code: "MTN", gate: "M1", seat: "Window, obviously" },
-      { name: "Beaches", code: "BCH", gate: "B4", seat: "Closest to the sea" },
-      { name: "Deserts", code: "DST", gate: "D7", seat: "Under the stars" }
+      { name: "Mountains", code: "MTN", gate: "M1", seat: "Window, obviously", skin: "mtn", stamp: "HIGH" },
+      { name: "Beaches", code: "BCH", gate: "B4", seat: "Closest to the sea", skin: "bch", stamp: "LOW" },
+      { name: "Deserts", code: "DST", gate: "D7", seat: "Under the stars", skin: "dst", stamp: "CLEAR" }
     ]
   }
 };
@@ -1711,15 +1748,22 @@ dialog.addEventListener("click", (event) => {
 });
 let funCleanup = null;
 
+function setFunSkin(kind, name) {
+  dialog.className = "dialog";
+  if (kind && name) dialog.classList.add(`skin-${kind}`, `skin-${name}`);
+}
+
 dialog.addEventListener("close", () => {
   dialogMedia.replaceChildren();
   if (funCleanup) funCleanup();
   funCleanup = null;
+  setFunSkin();
 });
 
 function openFun(key) {
   const fun = FUN[key];
   if (!fun) return;
+  setFunSkin();
   document.getElementById("dialog-kicker").textContent = fun.kicker;
   document.getElementById("dialog-title").textContent = fun.title;
   document.getElementById("dialog-org").textContent = fun.intro;
@@ -1737,37 +1781,64 @@ function openFun(key) {
 function renderMusic(body, fun) {
   body.innerHTML = `
     <div class="player is-playing">
-      <div class="vinyl" aria-hidden="true"><span></span></div>
+      <div class="vinyl" aria-hidden="true"><img alt=""><b></b></div>
       <div class="player-main">
         <p class="np-label">Now playing</p>
+        <p class="np-track"></p>
         <p class="np-artist"></p>
+        <p class="np-line"></p>
         <div class="eq" aria-hidden="true">${"<i></i>".repeat(16)}</div>
         <div class="player-controls">
-          <button type="button" data-act="prev" aria-label="Previous artist">⏮</button>
+          <button type="button" data-act="prev" aria-label="Previous">⏮</button>
           <button type="button" data-act="play" class="play" aria-label="Pause">⏸</button>
-          <button type="button" data-act="next" aria-label="Next artist">⏭</button>
+          <button type="button" data-act="next" aria-label="Next">⏭</button>
         </div>
       </div>
     </div>
     <ol class="tracklist">
-      ${fun.artists.map((a, i) => `<li><button type="button" data-i="${i}"><span>${pad(i + 1)}</span>${a.name}</button></li>`).join("")}
+      ${fun.artists.map((a, i) => `<li><button type="button" data-i="${i}"><span>${pad(i + 1)}</span>${a.name}<em>${a.track}</em></button></li>`).join("")}
     </ol>
-    <a class="spotify-link" target="_blank" rel="noopener">Find them on Spotify ↗</a>`;
+    <a class="spotify-link" target="_blank" rel="noopener">Open on Spotify ↗</a>`;
 
   const player = body.querySelector(".player");
+  const sleeve = body.querySelector(".vinyl img");
+  const mark = body.querySelector(".vinyl b");
+  const trackEl = body.querySelector(".np-track");
   const artistEl = body.querySelector(".np-artist");
+  const lineEl = body.querySelector(".np-line");
   const playBtn = body.querySelector(".play");
   const link = body.querySelector(".spotify-link");
   const rows = Array.from(body.querySelectorAll(".tracklist button"));
+  const covers = {};
   let current = 0;
+
+  const loadCover = async (artist) => {
+    if (covers[artist.spotify]) return covers[artist.spotify];
+    try {
+      const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(artist.query)}&entity=song&limit=1`);
+      const data = await res.json();
+      const url = data.results?.[0]?.artworkUrl100?.replace("100x100bb", "400x400bb")?.replace("100x100", "400x400");
+      if (url) covers[artist.spotify] = url;
+    } catch { /* sleeve stays as the mark */ }
+    return covers[artist.spotify] || "";
+  };
 
   const show = (i) => {
     current = (i + fun.artists.length) % fun.artists.length;
     const artist = fun.artists[current];
+    setFunSkin("music", artist.skin);
+    trackEl.textContent = artist.track;
     artistEl.textContent = artist.name;
-    player.style.setProperty("--disc", artist.color);
-    link.href = `https://open.spotify.com/search/${encodeURIComponent(artist.name)}`;
+    lineEl.textContent = artist.line;
+    mark.textContent = artist.mark;
+    sleeve.removeAttribute("src");
+    sleeve.alt = `${artist.name} · ${artist.track}`;
+    link.href = `https://open.spotify.com/track/${artist.spotify}`;
     rows.forEach((row, k) => row.classList.toggle("is-on", k === current));
+    loadCover(artist).then((url) => {
+      if (fun.artists[current] !== artist || !url) return;
+      sleeve.src = url;
+    });
   };
   body.querySelector("[data-act=prev]").addEventListener("click", () => show(current - 1));
   body.querySelector("[data-act=next]").addEventListener("click", () => show(current + 1));
@@ -1784,15 +1855,53 @@ function renderMusic(body, fun) {
 function renderGames(body) {
   body.innerHTML = `
     <div class="tiles">
-      <div class="tile tile-cr"><span class="elixir" aria-hidden="true">4</span><b>Clash Royale</b><small>game · on the phone</small></div>
-      <div class="tile tile-cricket"><span class="tile-icon" aria-hidden="true">🏏</span><b>Cricket</b><small>sport</small></div>
-      <div class="tile tile-football"><span class="tile-icon" aria-hidden="true">⚽</span><b>Football</b><small>sport</small></div>
+      <button type="button" class="tile tile-cr" data-game="clash"><span class="elixir" aria-hidden="true">4</span><b>Clash Royale</b><small>game · on the phone</small></button>
+      <button type="button" class="tile tile-cricket" data-game="cricket"><span class="tile-icon" aria-hidden="true">🏏</span><b>Cricket</b><small>sport</small></button>
+      <button type="button" class="tile tile-football" data-game="football"><span class="tile-icon" aria-hidden="true">⚽</span><b>Football</b><small>sport</small></button>
     </div>
+    <div class="arena"></div>`;
+  const arena = body.querySelector(".arena");
+  const tiles = Array.from(body.querySelectorAll(".tile"));
+  let stop = null;
+  const play = (game) => {
+    if (stop) stop();
+    tiles.forEach((tile) => tile.classList.toggle("is-on", tile.dataset.game === game));
+    setFunSkin("game", game);
+    if (game === "clash") stop = showClash(arena);
+    else if (game === "cricket") stop = showCricket(arena);
+    else stop = startFootball(arena);
+  };
+  tiles.forEach((tile) => tile.addEventListener("click", () => play(tile.dataset.game)));
+  play("football");
+  return () => { if (stop) stop(); };
+}
+
+function startFootball(arena) {
+  arena.innerHTML = `
     <div class="keepy">
-      <canvas width="720" height="260" aria-label="Keepy-uppy mini game. Click the ball to keep it in the air."></canvas>
-      <p class="keepy-score"><span>Keepy-uppy: click the ball, don’t let it drop.</span><b>0</b><small>best 0</small></p>
+      <canvas width="720" height="260" aria-label="Keepy-uppy. Tap the ball and don’t let it drop."></canvas>
+      <p class="keepy-score"><span>Keepy-uppy. Tap the ball, don’t let it drop.</span><b>0</b><small>best 0</small></p>
     </div>`;
-  return startKeepy(body.querySelector(".keepy canvas"), body.querySelector(".keepy-score b"), body.querySelector(".keepy-score small"));
+  return startKeepy(arena.querySelector("canvas"), arena.querySelector(".keepy-score b"), arena.querySelector(".keepy-score small"));
+}
+
+function showClash(arena) {
+  arena.innerHTML = `
+    <div class="mood mood-clash">
+      <span class="elixir" aria-hidden="true">4</span>
+      <p class="mood-kicker">Arena · phone in the other hand</p>
+      <p class="mood-copy">Purple lane, river down the middle. Elixir management is just sprint planning.</p>
+    </div>`;
+  return null;
+}
+
+function showCricket(arena) {
+  arena.innerHTML = `
+    <div class="mood mood-cricket">
+      <p class="mood-kicker">On the TV, volume up</p>
+      <p class="mood-copy">Red ball, three stumps, long afternoon. No mini-game. Just the sport.</p>
+    </div>`;
+  return null;
 }
 
 function startKeepy(cv, scoreEl, bestEl) {
@@ -1929,7 +2038,7 @@ function renderTravel(body, fun) {
               <div><dt>Boarding</dt><dd>Anytime</dd></div>
             </dl>
           </div>
-          <span class="pass-stamp" aria-hidden="true">Next up</span>
+          <span class="pass-stamp" aria-hidden="true">${pass.stamp}</span>
         </article>`).join("")}
     </div>
     <button type="button" class="pick-trip">Pick my next trip</button>
@@ -1937,7 +2046,18 @@ function renderTravel(body, fun) {
 
   const passes = Array.from(body.querySelectorAll(".pass"));
   const result = body.querySelector(".pick-result");
+  const kicker = document.getElementById("dialog-kicker");
   let timer = 0;
+  const land = (i) => {
+    const trip = fun.passes[i];
+    passes.forEach((pass, k) => {
+      pass.classList.toggle("is-picked", k === i);
+      pass.classList.remove("is-hover");
+    });
+    setFunSkin("trip", trip.skin);
+    kicker.textContent = `Off the clock · ${trip.name} · DEP ${trip.stamp}`;
+    result.textContent = `Next trip: ${trip.name.toLowerCase()}. Bags are already packed.`;
+  };
   body.querySelector(".pick-trip").addEventListener("click", () => {
     clearInterval(timer);
     let hops = 0;
@@ -1945,21 +2065,26 @@ function renderTravel(body, fun) {
     const total = 9 + final;
     passes.forEach((pass) => pass.classList.remove("is-picked"));
     result.textContent = "";
+    setFunSkin();
+    kicker.textContent = fun.kicker;
     timer = setInterval(() => {
       passes.forEach((pass, k) => pass.classList.toggle("is-hover", k === hops % passes.length));
       hops += 1;
       if (hops > total) {
         clearInterval(timer);
-        passes.forEach((pass) => pass.classList.remove("is-hover"));
-        passes[final].classList.add("is-picked");
-        result.textContent = `Next trip: ${fun.passes[final].name.toLowerCase()}. Bags are already packed.`;
+        land(final);
       }
     }, 110);
   });
+  passes.forEach((pass, i) => pass.addEventListener("click", () => {
+    clearInterval(timer);
+    land(i);
+  }));
   return () => clearInterval(timer);
 }
 
 function openProject(i) {
+  setFunSkin();
   dialogMedia.hidden = false;
   dialogMedia.classList.remove("is-embed");
   const project = PROJECTS[i];

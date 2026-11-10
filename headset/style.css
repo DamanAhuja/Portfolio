@@ -431,27 +431,41 @@ h1, h2 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.03em; m
   background: linear-gradient(120deg, transparent 40%, rgba(255, 255, 255, 0.12) 50%, transparent 60%);
 }
 
-.vinyl span {
+.vinyl img {
   position: absolute;
-  inset: 36%;
+  inset: 18%;
+  width: 64%;
+  height: 64%;
   border-radius: 50%;
+  object-fit: cover;
   background: var(--disc);
-  transition: background 0.3s ease;
 }
 
-.vinyl span::after {
-  content: "";
+.vinyl b {
   position: absolute;
-  inset: 42%;
+  z-index: 1;
+  inset: 38%;
+  display: grid;
+  place-items: center;
   border-radius: 50%;
   background: #0d0b08;
+  color: var(--disc);
+  font: 700 0.72rem var(--sans);
+  letter-spacing: 0.04em;
+  pointer-events: none;
 }
+
+.vinyl img[src] + b { opacity: 0; }
 
 .player.is-playing .vinyl, .player.is-playing .eq i { animation-play-state: running; }
 
 .np-label { margin: 0; color: var(--faint); font: 500 0.72rem var(--mono); letter-spacing: 0.1em; text-transform: uppercase; }
 
-.np-artist { margin: 4px 0 12px; font: 600 clamp(1.6rem, 3.4vw, 2.3rem)/1 var(--serif); }
+.np-track { margin: 4px 0 0; font: 600 clamp(1.6rem, 3.4vw, 2.3rem)/1 var(--serif); }
+
+.np-artist { margin: 4px 0 0; color: var(--muted); font: 500 1rem var(--sans); }
+
+.np-line { margin: 8px 0 12px; color: var(--skin, var(--signal)); font: 500 0.78rem var(--mono); letter-spacing: 0.06em; }
 
 .eq { display: flex; align-items: flex-end; gap: 4px; height: 34px; }
 
@@ -482,12 +496,13 @@ h1, h2 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.03em; m
   cursor: pointer;
 }
 
-.player-controls .play { background: var(--disc); color: #0d0b08; border-color: transparent; }
+.player-controls .play { background: var(--disc); color: var(--skin-ink, #0d0b08); border-color: transparent; }
 
 .tracklist { display: grid; gap: 4px; margin: 14px 0 0; padding: 0; list-style: none; }
 
 .tracklist button {
   display: flex;
+  align-items: baseline;
   gap: 14px;
   width: 100%;
   padding: 10px 14px;
@@ -506,7 +521,9 @@ h1, h2 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.03em; m
 
 .tracklist button.is-on { background: rgba(243, 239, 228, 0.08); color: var(--ink); }
 
-.spotify-link { display: inline-block; margin-top: 14px; color: var(--signal); font: 500 0.85rem var(--mono); }
+.tracklist button em { margin-left: auto; color: var(--faint); font: 500 0.78rem var(--mono); font-style: normal; }
+
+.spotify-link { display: inline-block; margin-top: 14px; color: var(--skin, var(--signal)); font: 500 0.85rem var(--mono); }
 
 /* Games and sports */
 .tiles {
@@ -522,12 +539,18 @@ h1, h2 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.03em; m
   align-content: end;
   min-height: 120px;
   padding: 14px;
+  border: 2px solid transparent;
   border-radius: 16px;
   overflow: hidden;
-  transition: transform 0.2s ease;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .tile:hover { transform: translateY(-3px) rotate(-1deg); }
+
+.tile.is-on { border-color: var(--skin, var(--signal)); }
 
 .tile b { font: 600 1.2rem var(--serif); }
 
@@ -556,7 +579,42 @@ h1, h2 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.03em; m
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
-.keepy { margin-top: 14px; }
+.arena { margin-top: 14px; }
+
+.arena-hint { margin: 0 0 10px; color: var(--muted); font: 500 0.88rem var(--sans); }
+
+.mood {
+  position: relative;
+  min-height: 140px;
+  padding: 22px 22px 20px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.mood-kicker {
+  margin: 0 0 8px;
+  color: rgba(243, 239, 228, 0.55);
+  font: 500 0.72rem var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.mood-copy { margin: 0; max-width: 36rem; color: var(--ink); font: 500 1.15rem/1.45 var(--serif); }
+
+.mood-clash {
+  background:
+    linear-gradient(180deg, rgba(27, 20, 100, 0.2), transparent 40%),
+    linear-gradient(90deg, transparent 46%, #3b82f6 46%, #3b82f6 54%, transparent 54%),
+    linear-gradient(160deg, #3b5bdb, #6b2fb8);
+}
+
+.mood-clash .elixir { top: 16px; right: 16px; }
+
+.mood-cricket {
+  background:
+    linear-gradient(#c9a36a, #c9a36a) bottom / 100% 38% no-repeat,
+    linear-gradient(#1c4d2d, #163c24);
+}
 
 .keepy canvas {
   display: block;
@@ -566,6 +624,8 @@ h1, h2 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.03em; m
   cursor: pointer;
   touch-action: manipulation;
 }
+
+.keepy { margin-top: 0; }
 
 .keepy-score {
   display: flex;
@@ -578,7 +638,7 @@ h1, h2 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.03em; m
 
 .keepy-score span { flex: 1; }
 
-.keepy-score b { color: var(--signal); font: 600 1.6rem var(--serif); }
+.keepy-score b { color: var(--skin, var(--signal)); font: 600 1.6rem var(--serif); }
 
 .keepy-score small { color: var(--faint); font-family: var(--mono); }
 
@@ -654,8 +714,8 @@ h1, h2 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.03em; m
   padding: 11px 18px;
   border: 0;
   border-radius: 999px;
-  background: var(--signal);
-  color: var(--signal-ink);
+  background: var(--skin, var(--signal));
+  color: var(--skin-ink, var(--signal-ink));
   font: 600 0.95rem var(--sans);
   cursor: pointer;
 }
@@ -708,13 +768,40 @@ h1, h2 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.03em; m
 .resume-row { margin: 18px 0 0; padding: 0; list-style: none; }
 
 .dialog {
+  --skin: var(--signal);
+  --skin-ink: var(--signal-ink);
   width: min(860px, calc(100vw - 24px));
   max-height: calc(100vh - 24px);
   padding: 0;
   overflow: auto;
   color: var(--ink);
   background: rgba(10, 13, 8, 0.94);
+  transition: background 0.35s ease, box-shadow 0.35s ease;
 }
+
+.dialog.skin-music .player { --disc: var(--skin); }
+.dialog.skin-sm { --skin: #c4d4a4; --skin-ink: #10140c; background: #161910; }
+.dialog.skin-sm .dialog-copy h2 { font-family: var(--serif); letter-spacing: 0; text-transform: none; }
+.dialog.skin-sm .np-track { font-family: var(--serif); }
+.dialog.skin-sm .np-line { letter-spacing: 0.02em; }
+.dialog.skin-nanku { --skin: #ff4fa3; --skin-ink: #2a0818; background: #1c0f18; }
+.dialog.skin-nanku .dialog-copy h2, .dialog.skin-nanku .np-track { font-weight: 500; }
+.dialog.skin-nanku .player {
+  background:
+    radial-gradient(circle at 88% 18%, rgba(255, 79, 163, 0.22), transparent 36%),
+    linear-gradient(135deg, rgba(243, 239, 228, 0.06), rgba(243, 239, 228, 0.01));
+}
+.dialog.skin-em { --skin: #f3efe4; --skin-ink: #111; background: #0a0a0a; box-shadow: inset 6px 0 0 #b11226; }
+.dialog.skin-em .dialog-copy h2, .dialog.skin-em .np-track { font-family: var(--sans); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; font-style: normal; }
+.dialog.skin-em .np-line { color: var(--muted); letter-spacing: 0.04em; font-weight: 500; }
+
+.dialog.skin-clash { --skin: #f7a8ff; background: #16103a; }
+.dialog.skin-cricket { --skin: #7dce7a; background: #102418; }
+.dialog.skin-football { --skin: #d6ff4a; background: #0c1810; }
+
+.dialog.skin-mtn { --skin: #bcd3e6; background: #152028; }
+.dialog.skin-bch { --skin: #ffd9a8; background: #2a1c12; }
+.dialog.skin-dst { --skin: #c98b4f; background: #161226; }
 
 .dialog::backdrop { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); }
 
