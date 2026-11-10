@@ -173,31 +173,25 @@ const FUN = {
     kicker: "Off the clock · Music",
     title: "On repeat",
     intro: "What plays while the build runs.",
-    spotify: "",
-    items: [
-      { name: "Seedhe Maut" },
-      { name: "Nanku" },
-      { name: "Eminem" }
+    artists: [
+      { name: "Seedhe Maut", color: "#d6ff4a" },
+      { name: "Nanku", color: "#ff8a5b" },
+      { name: "Eminem", color: "#5ac8fa" }
     ]
   },
   games: {
     kicker: "Off the clock · Games & sports",
     title: "Games & sports",
-    intro: "On the phone, on the pitch, or on the TV.",
-    items: [
-      { name: "Clash Royale", note: "game" },
-      { name: "Cricket", note: "sport" },
-      { name: "Football", note: "sport" }
-    ]
+    intro: "On the phone, on the pitch, or on the TV."
   },
   travel: {
     kicker: "Off the clock · Travel",
     title: "Anywhere works",
-    intro: "Not a list of places. Just the kind of place.",
-    items: [
-      { name: "Mountains" },
-      { name: "Beaches" },
-      { name: "Deserts" }
+    intro: "No list of places. Just pick a kind of place and I’m in.",
+    passes: [
+      { name: "Mountains", code: "MTN", gate: "M1", seat: "Window, obviously" },
+      { name: "Beaches", code: "BCH", gate: "B4", seat: "Closest to the sea" },
+      { name: "Deserts", code: "DST", gate: "D7", seat: "Under the stars" }
     ]
   }
 };
@@ -1180,8 +1174,8 @@ function updateVR(p, time, dt) {
   const rEased = Math.min(rn - 1, rBase + smooth(range(rx - rBase, 0.3, 0.7)));
   const recAngle = vr.pedestals[0].angle + rEased * REC_SPACING;
   tmpC.set(Math.sin(recAngle), 0, -Math.cos(recAngle));
-  REC_CAM.set(0, 1.45, 0).addScaledVector(tmpC, -0.45);
-  REC_LOOK.set(0, 0.62, 0).addScaledVector(tmpC, REC_RADIUS);
+  REC_CAM.set(0, 1.35, 0).addScaledVector(tmpC, 0.5);
+  REC_LOOK.set(0, 0.6, 0).addScaledVector(tmpC, REC_RADIUS);
   if (p > P.labEnd) {
     const drift = range(p, P.labEnd, P.exitSwitch);
     REC_CAM.addScaledVector(tmpC, -drift * 1.2);
@@ -1517,8 +1511,12 @@ document.getElementById("dialog-close").addEventListener("click", () => dialog.c
 dialog.addEventListener("click", (event) => {
   if (event.target === dialog) dialog.close();
 });
+let funCleanup = null;
+
 dialog.addEventListener("close", () => {
   dialogMedia.replaceChildren();
+  if (funCleanup) funCleanup();
+  funCleanup = null;
 });
 
 function openFun(key) {
@@ -1529,34 +1527,238 @@ function openFun(key) {
   document.getElementById("dialog-org").textContent = fun.intro;
   document.getElementById("dialog-stack").textContent = "";
   document.getElementById("dialog-links").replaceChildren();
+  dialogMedia.hidden = true;
 
-  const list = document.createElement("ul");
-  list.className = "fun-list";
-  list.replaceChildren(...fun.items.map((item) => {
-    const li = document.createElement("li");
-    li.textContent = item.name;
-    if (item.note) {
-      const note = document.createElement("small");
-      note.textContent = item.note;
-      li.appendChild(note);
-    }
-    return li;
-  }));
-  document.getElementById("dialog-body").replaceChildren(list);
-
-  if (fun.spotify) {
-    const frameEl = document.createElement("iframe");
-    frameEl.src = fun.spotify;
-    frameEl.title = "Spotify playlist";
-    frameEl.allow = "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";
-    frameEl.loading = "lazy";
-    dialogMedia.replaceChildren(frameEl);
-    dialogMedia.classList.add("is-embed");
-    dialogMedia.hidden = false;
-  } else {
-    dialogMedia.hidden = true;
-  }
+  const body = document.getElementById("dialog-body");
+  if (key === "music") funCleanup = renderMusic(body, fun);
+  else if (key === "games") funCleanup = renderGames(body);
+  else funCleanup = renderTravel(body, fun);
   dialog.showModal();
+}
+
+function renderMusic(body, fun) {
+  body.innerHTML = `
+    <div class="player is-playing">
+      <div class="vinyl" aria-hidden="true"><span></span></div>
+      <div class="player-main">
+        <p class="np-label">Now playing</p>
+        <p class="np-artist"></p>
+        <div class="eq" aria-hidden="true">${"<i></i>".repeat(16)}</div>
+        <div class="player-controls">
+          <button type="button" data-act="prev" aria-label="Previous artist">⏮</button>
+          <button type="button" data-act="play" class="play" aria-label="Pause">⏸</button>
+          <button type="button" data-act="next" aria-label="Next artist">⏭</button>
+        </div>
+      </div>
+    </div>
+    <ol class="tracklist">
+      ${fun.artists.map((a, i) => `<li><button type="button" data-i="${i}"><span>${pad(i + 1)}</span>${a.name}</button></li>`).join("")}
+    </ol>
+    <a class="spotify-link" target="_blank" rel="noopener">Find them on Spotify ↗</a>`;
+
+  const player = body.querySelector(".player");
+  const artistEl = body.querySelector(".np-artist");
+  const playBtn = body.querySelector(".play");
+  const link = body.querySelector(".spotify-link");
+  const rows = Array.from(body.querySelectorAll(".tracklist button"));
+  let current = 0;
+
+  const show = (i) => {
+    current = (i + fun.artists.length) % fun.artists.length;
+    const artist = fun.artists[current];
+    artistEl.textContent = artist.name;
+    player.style.setProperty("--disc", artist.color);
+    link.href = `https://open.spotify.com/search/${encodeURIComponent(artist.name)}`;
+    rows.forEach((row, k) => row.classList.toggle("is-on", k === current));
+  };
+  body.querySelector("[data-act=prev]").addEventListener("click", () => show(current - 1));
+  body.querySelector("[data-act=next]").addEventListener("click", () => show(current + 1));
+  playBtn.addEventListener("click", () => {
+    const playing = player.classList.toggle("is-playing");
+    playBtn.textContent = playing ? "⏸" : "▶";
+    playBtn.setAttribute("aria-label", playing ? "Pause" : "Play");
+  });
+  rows.forEach((row) => row.addEventListener("click", () => show(Number(row.dataset.i))));
+  show(0);
+  return null;
+}
+
+function renderGames(body) {
+  body.innerHTML = `
+    <div class="tiles">
+      <div class="tile tile-cr"><span class="elixir" aria-hidden="true">4</span><b>Clash Royale</b><small>game · on the phone</small></div>
+      <div class="tile tile-cricket"><span class="tile-icon" aria-hidden="true">🏏</span><b>Cricket</b><small>sport</small></div>
+      <div class="tile tile-football"><span class="tile-icon" aria-hidden="true">⚽</span><b>Football</b><small>sport</small></div>
+    </div>
+    <div class="keepy">
+      <canvas width="720" height="260" aria-label="Keepy-uppy mini game. Click the ball to keep it in the air."></canvas>
+      <p class="keepy-score"><span>Keepy-uppy: click the ball, don’t let it drop.</span><b>0</b><small>best 0</small></p>
+    </div>`;
+  return startKeepy(body.querySelector(".keepy canvas"), body.querySelector(".keepy-score b"), body.querySelector(".keepy-score small"));
+}
+
+function startKeepy(cv, scoreEl, bestEl) {
+  const ctx = cv.getContext("2d");
+  const W = cv.width;
+  const H = cv.height;
+  const R = 24;
+  const ground = H - 18;
+  const ball = { x: W / 2, y: ground - R, vx: 0, vy: 0, spin: 0 };
+  let score = 0;
+  let best = Number(localStorage.getItem("keepy-best") || 0);
+  let airborne = false;
+  let last = performance.now();
+  let raf = 0;
+  bestEl.textContent = `best ${best}`;
+
+  const onDown = (event) => {
+    const rect = cv.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width) * W;
+    const y = ((event.clientY - rect.top) / rect.height) * H;
+    if (Math.hypot(x - ball.x, y - ball.y) > R * 1.9) return;
+    ball.vy = -(520 + Math.random() * 120);
+    ball.vx = (ball.x - x) * 9 + (Math.random() - 0.5) * 120;
+    airborne = true;
+    score += 1;
+    if (score > best) {
+      best = score;
+      localStorage.setItem("keepy-best", String(best));
+      bestEl.textContent = `best ${best}`;
+    }
+    scoreEl.textContent = String(score);
+  };
+  cv.addEventListener("pointerdown", onDown);
+
+  const tick = (now) => {
+    const dt = Math.min((now - last) / 1000, 0.04);
+    last = now;
+    if (airborne) {
+      ball.vy += 1300 * dt;
+      ball.x += ball.vx * dt;
+      ball.y += ball.vy * dt;
+      ball.spin += ball.vx * dt * 0.05;
+      if (ball.x < R || ball.x > W - R) {
+        ball.x = clamp(ball.x, R, W - R);
+        ball.vx *= -0.8;
+      }
+      if (ball.y < R) {
+        ball.y = R;
+        ball.vy = Math.abs(ball.vy) * 0.5;
+      }
+      if (ball.y >= ground - R) {
+        ball.y = ground - R;
+        ball.vx = 0;
+        ball.vy = 0;
+        airborne = false;
+        score = 0;
+        scoreEl.textContent = "0";
+      }
+    }
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "#123d22";
+    ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = "rgba(255,255,255,0.18)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(W / 2, H + 40, 120, Math.PI, 0);
+    ctx.moveTo(W / 2, 0);
+    ctx.lineTo(W / 2, H);
+    ctx.stroke();
+    ctx.fillStyle = "rgba(255,255,255,0.25)";
+    ctx.fillRect(0, ground, W, 2);
+    ctx.fillStyle = "rgba(0,0,0,0.25)";
+    const shadow = 1 - clamp((ground - R - ball.y) / 220, 0, 0.7);
+    ctx.beginPath();
+    ctx.ellipse(ball.x, ground + 2, R * shadow, 5 * shadow, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.save();
+    ctx.translate(ball.x, ball.y);
+    ctx.rotate(ball.spin);
+    ctx.fillStyle = "#f3efe4";
+    ctx.beginPath();
+    ctx.arc(0, 0, R, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#1b1c19";
+    for (let k = 0; k < 6; k += 1) {
+      const a = (k / 5) * Math.PI * 2;
+      const cx = k === 5 ? 0 : Math.cos(a) * R * 0.72;
+      const cy = k === 5 ? 0 : Math.sin(a) * R * 0.72;
+      ctx.beginPath();
+      for (let s = 0; s < 5; s += 1) {
+        const b = (s / 5) * Math.PI * 2 + a;
+        ctx.lineTo(cx + Math.cos(b) * R * 0.26, cy + Math.sin(b) * R * 0.26);
+      }
+      ctx.fill();
+    }
+    ctx.restore();
+
+    if (!airborne) {
+      ctx.fillStyle = "rgba(243,239,228,0.7)";
+      ctx.font = '500 16px "IBM Plex Mono", monospace';
+      ctx.textAlign = "center";
+      ctx.fillText("tap the ball", W / 2, ground - R * 2 - 16);
+    }
+    raf = requestAnimationFrame(tick);
+  };
+  tick(last);
+
+  return () => {
+    cancelAnimationFrame(raf);
+    cv.removeEventListener("pointerdown", onDown);
+  };
+}
+
+const PASS_ART = {
+  Mountains: `<svg viewBox="0 0 200 90" aria-hidden="true"><rect width="200" height="90" fill="#bcd3e6"/><circle cx="160" cy="24" r="12" fill="#fff6d8"/><path d="M0 90 L55 25 L85 60 L120 15 L200 90Z" fill="#4a6670"/><path d="M55 25 L66 38 L48 34Z M120 15 L134 32 L110 30Z" fill="#fff"/><path d="M0 90 L40 62 L80 90Z" fill="#2f4b3a"/></svg>`,
+  Beaches: `<svg viewBox="0 0 200 90" aria-hidden="true"><rect width="200" height="90" fill="#ffd9a8"/><circle cx="100" cy="52" r="20" fill="#ff8a5b"/><rect y="52" width="200" height="38" fill="#3d7ea6"/><path d="M0 64 Q25 58 50 64 T100 64 T150 64 T200 64 V90 H0Z" fill="#5ac8fa" opacity="0.6"/><path d="M0 80 Q40 70 80 80 T200 78 V90 H0Z" fill="#f2d49b"/></svg>`,
+  Deserts: `<svg viewBox="0 0 200 90" aria-hidden="true"><rect width="200" height="90" fill="#2b2545"/><circle cx="40" cy="20" r="1.5" fill="#fff"/><circle cx="90" cy="12" r="1" fill="#fff"/><circle cx="150" cy="26" r="1.5" fill="#fff"/><circle cx="120" cy="16" r="1" fill="#fff"/><path d="M178 14 a10 10 0 1 0 6 18 a8 8 0 1 1 -6 -18Z" fill="#fff6d8"/><path d="M0 70 Q50 45 100 68 T200 60 V90 H0Z" fill="#c98b4f"/><path d="M0 82 Q60 64 120 80 T200 76 V90 H0Z" fill="#a8663a"/></svg>`
+};
+
+function renderTravel(body, fun) {
+  body.innerHTML = `
+    <div class="passes">
+      ${fun.passes.map((pass) => `
+        <article class="pass">
+          <div class="pass-art">${PASS_ART[pass.name]}</div>
+          <div class="pass-body">
+            <p class="pass-route"><span>DEL</span><i aria-hidden="true">✈</i><span>${pass.code}</span></p>
+            <h3>${pass.name}</h3>
+            <dl>
+              <div><dt>Gate</dt><dd>${pass.gate}</dd></div>
+              <div><dt>Seat</dt><dd>${pass.seat}</dd></div>
+              <div><dt>Boarding</dt><dd>Anytime</dd></div>
+            </dl>
+          </div>
+          <span class="pass-stamp" aria-hidden="true">Next up</span>
+        </article>`).join("")}
+    </div>
+    <button type="button" class="pick-trip">Pick my next trip</button>
+    <p class="pick-result" aria-live="polite"></p>`;
+
+  const passes = Array.from(body.querySelectorAll(".pass"));
+  const result = body.querySelector(".pick-result");
+  let timer = 0;
+  body.querySelector(".pick-trip").addEventListener("click", () => {
+    clearInterval(timer);
+    let hops = 0;
+    const final = Math.floor(Math.random() * passes.length);
+    const total = 9 + final;
+    passes.forEach((pass) => pass.classList.remove("is-picked"));
+    result.textContent = "";
+    timer = setInterval(() => {
+      passes.forEach((pass, k) => pass.classList.toggle("is-hover", k === hops % passes.length));
+      hops += 1;
+      if (hops > total) {
+        clearInterval(timer);
+        passes.forEach((pass) => pass.classList.remove("is-hover"));
+        passes[final].classList.add("is-picked");
+        result.textContent = `Next trip: ${fun.passes[final].name.toLowerCase()}. Bags are already packed.`;
+      }
+    }, reduceMotion ? 10 : 110);
+  });
+  return () => clearInterval(timer);
 }
 
 function openProject(i) {
