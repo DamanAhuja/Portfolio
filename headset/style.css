@@ -332,8 +332,14 @@ h1, h2 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.03em; m
 
 .record-note { margin: 14px 0 0; color: var(--muted); font-size: 0.88rem; line-height: 1.5; }
 
+.beat-fun {
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 5vh;
+}
+
 .fun-card {
-  width: min(400px, 100%);
+  width: min(380px, 100%);
   padding: 20px 22px;
   border: 1px solid var(--line);
   border-radius: 22px;

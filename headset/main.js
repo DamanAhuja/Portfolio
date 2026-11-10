@@ -124,29 +124,29 @@ const FUN = {
     intro: "What plays while the build runs.",
     spotify: "",
     items: [
-      { name: "Artist or song", note: "add your pick" },
-      { name: "Artist or song", note: "add your pick" },
-      { name: "Artist or song", note: "add your pick" }
+      { name: "Seedhe Maut" },
+      { name: "Nanku" },
+      { name: "Eminem" }
     ]
   },
   games: {
-    kicker: "Off the clock · Games",
-    title: "Currently playing",
-    intro: "What I play when I’m not building them.",
+    kicker: "Off the clock · Games & sports",
+    title: "Games & sports",
+    intro: "On the phone, on the pitch, or on the TV.",
     items: [
-      { name: "Game title", note: "add why you love it" },
-      { name: "Game title", note: "add why you love it" },
-      { name: "Game title", note: "add why you love it" }
+      { name: "Clash Royale", note: "game" },
+      { name: "Cricket", note: "sport" },
+      { name: "Football", note: "sport" }
     ]
   },
   travel: {
     kicker: "Off the clock · Travel",
-    title: "Pins on the globe",
-    intro: "Places I’ve been, and the next one on the list.",
+    title: "Anywhere works",
+    intro: "Not a list of places. Just the kind of place.",
     items: [
-      { name: "Place", note: "add a year or a memory" },
-      { name: "Place", note: "add a year or a memory" },
-      { name: "Next up: place", note: "where you want to go" }
+      { name: "Mountains" },
+      { name: "Beaches" },
+      { name: "Deserts" }
     ]
   }
 };
@@ -201,6 +201,7 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.01, 200);
 
 const room = buildRoom();
+window.__dbg = { room, kickBall: (k) => kickBall(k) };
 const vr = buildVR();
 
 const fade = document.getElementById("fade");
@@ -258,6 +259,7 @@ window.addEventListener("pointermove", (event) => {
 canvas.addEventListener("click", () => {
   if (hovered !== null) openProject(hovered);
   else if (hoveredProp === "lamp") toggleLamp();
+  else if (hoveredProp === "football" || hoveredProp === "cricket") kickBall(hoveredProp);
   else if (hoveredProp) openFun(hoveredProp);
 });
 
@@ -287,7 +289,7 @@ function frame() {
   vignette.style.opacity = (range(p, 0.12, 0.2) * (p < P.roomSwitch ? 1 : 0)).toFixed(3);
 
   if (p < P.roomSwitch || p >= P.exitSwitch) {
-    setFov(42);
+    setFov(p < P.roomSwitch ? 42 : roomExitFov());
     hovered = null;
     updateRoom(p, time, dt);
     renderer.render(room.scene, camera);
@@ -300,6 +302,13 @@ function frame() {
     updateVR(p, time, dt);
     renderer.render(vr.scene, camera);
   }
+}
+
+function roomExitFov() {
+  const aspect = window.innerWidth / window.innerHeight;
+  if (aspect >= 1.6) return 42;
+  const halfH = Math.atan(Math.tan(THREE.MathUtils.degToRad(21)) * 1.6);
+  return Math.round(Math.min(78, THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(halfH) / aspect))));
 }
 
 function setFov(fov) {
@@ -412,6 +421,12 @@ function buildRoom() {
   globe.group.position.set(-0.42, 0.9, -0.62);
   scene.add(headphones, controller, globe.group);
 
+  const balls = [
+    buildBall("football", 0.055, -0.8, 0.12),
+    buildBall("cricket", 0.036, -0.14, 0.2)
+  ];
+  balls.forEach((ball) => scene.add(ball.mesh));
+
   const lampHit = new THREE.Mesh(new THREE.SphereGeometry(0.16, 12, 12), new THREE.MeshBasicMaterial({ visible: false }));
   lampHit.position.copy(lampHead.position);
   scene.add(lampHit);
@@ -420,13 +435,140 @@ function buildRoom() {
     { key: "music", group: headphones, hit: headphones, anchor: new THREE.Vector3(0.98, 1.22, 0.02) },
     { key: "games", group: controller, hit: controller, anchor: new THREE.Vector3(0.42, 1.02, 0.16) },
     { key: "travel", group: globe.group, hit: globe.group, anchor: new THREE.Vector3(-0.42, 1.25, -0.62) },
-    { key: "lamp", group: null, hit: lampHit, anchor: null }
+    { key: "lamp", group: null, hit: lampHit, anchor: null },
+    ...balls.map((ball) => ({ key: ball.key, group: ball.mesh, hit: ball.mesh, anchor: null }))
   ];
   props.forEach((prop) => {
     prop.hit.traverse((obj) => { obj.userData.prop = prop.key; });
   });
 
-  return { scene, headset, props, globe, lamp, bulb, lampOn: true };
+  return { scene, headset, props, globe, balls, lamp, bulb, lampOn: true };
+}
+
+const DESK_TOP = 0.9;
+const DESK_BOUNDS = { minX: -1.27, maxX: 1.27, minZ: -0.97, maxZ: 0.28 };
+const DESK_OBSTACLES = [
+  { x: 0.05, z: -0.15, r: 0.3 },
+  { x: 0.85, z: -0.5, r: 0.3 },
+  { x: 0.42, z: 0.16, r: 0.1 },
+  { x: 0.98, z: 0.02, r: 0.14 },
+  { x: -0.42, z: -0.62, r: 0.09 },
+  { x: -0.45, z: 0.05, r: 0.055 },
+  { x: -0.95, z: -0.55, r: 0.14 }
+];
+
+function buildBall(key, radius, x, z) {
+  const ballCanvas = document.createElement("canvas");
+  ballCanvas.width = 512;
+  ballCanvas.height = 256;
+  const ctx = ballCanvas.getContext("2d");
+  if (key === "football") {
+    ctx.fillStyle = "#f3efe4";
+    ctx.fillRect(0, 0, 512, 256);
+    ctx.fillStyle = "#1b1c19";
+    for (let row = 0; row < 4; row += 1) {
+      for (let col = 0; col < 6; col += 1) {
+        const cx = col * 86 + (row % 2) * 43 + 20;
+        const cy = row * 64 + 32;
+        ctx.beginPath();
+        for (let k = 0; k < 5; k += 1) {
+          const a = (k / 5) * Math.PI * 2 - Math.PI / 2;
+          ctx.lineTo(cx + Math.cos(a) * 20, cy + Math.sin(a) * 16);
+        }
+        ctx.fill();
+      }
+    }
+  } else {
+    ctx.fillStyle = "#8f1d1d";
+    ctx.fillRect(0, 0, 512, 256);
+    ctx.fillStyle = "#efe8d8";
+    ctx.fillRect(0, 124, 512, 8);
+    ctx.strokeStyle = "#efe8d8";
+    ctx.lineWidth = 2;
+    for (let sx = 4; sx < 512; sx += 12) {
+      for (const sy of [114, 142]) {
+        ctx.beginPath();
+        ctx.moveTo(sx, sy - 4);
+        ctx.lineTo(sx + 6, sy + 4);
+        ctx.stroke();
+      }
+    }
+  }
+  const texture = new THREE.CanvasTexture(ballCanvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  const mesh = new THREE.Mesh(
+    new THREE.SphereGeometry(radius, 32, 20),
+    new THREE.MeshStandardMaterial({ map: texture, roughness: key === "football" ? 0.6 : 0.35 })
+  );
+  mesh.position.set(x, DESK_TOP + radius, z);
+  mesh.rotation.set(0.4, 0.8, 0.2);
+  mesh.castShadow = true;
+  return { key, mesh, r: radius, vel: new THREE.Vector3(), moving: false };
+}
+
+function kickBall(key) {
+  const ball = room.balls.find((b) => b.key === key);
+  if (!ball) return;
+  const angle = Math.random() * Math.PI * 2;
+  const speed = 0.5 + Math.random() * 0.35;
+  ball.vel.set(Math.cos(angle) * speed, 1.5 + Math.random() * 0.5, Math.sin(angle) * speed);
+  ball.moving = true;
+}
+
+const rollAxis = new THREE.Vector3();
+
+function updateBalls(dt) {
+  room.balls.forEach((ball) => {
+    if (!ball.moving) return;
+    const { mesh, vel, r } = ball;
+    const pos = mesh.position;
+    vel.y -= 9.8 * dt;
+    pos.addScaledVector(vel, dt);
+
+    const floor = DESK_TOP + r;
+    const grounded = pos.y <= floor;
+    if (grounded) {
+      pos.y = floor;
+      if (vel.y < 0) vel.y = -vel.y * 0.55;
+      if (vel.y < 0.2) vel.y = 0;
+      const drag = Math.max(0, 1 - 1.6 * dt);
+      vel.x *= drag;
+      vel.z *= drag;
+    }
+
+    if (pos.x < DESK_BOUNDS.minX + r || pos.x > DESK_BOUNDS.maxX - r) {
+      pos.x = clamp(pos.x, DESK_BOUNDS.minX + r, DESK_BOUNDS.maxX - r);
+      vel.x *= -0.6;
+    }
+    if (pos.z < DESK_BOUNDS.minZ + r || pos.z > DESK_BOUNDS.maxZ - r) {
+      pos.z = clamp(pos.z, DESK_BOUNDS.minZ + r, DESK_BOUNDS.maxZ - r);
+      vel.z *= -0.6;
+    }
+    for (const o of DESK_OBSTACLES) {
+      const dx = pos.x - o.x;
+      const dz = pos.z - o.z;
+      const d = Math.hypot(dx, dz);
+      const min = o.r + r;
+      if (d > 0 && d < min) {
+        const nx = dx / d;
+        const nz = dz / d;
+        pos.x = o.x + nx * min;
+        pos.z = o.z + nz * min;
+        const vn = vel.x * nx + vel.z * nz;
+        if (vn < 0) {
+          vel.x -= 1.6 * vn * nx;
+          vel.z -= 1.6 * vn * nz;
+        }
+      }
+    }
+
+    const flat = Math.hypot(vel.x, vel.z);
+    if (flat > 0.001) {
+      rollAxis.set(vel.z, 0, -vel.x).normalize();
+      mesh.rotateOnWorldAxis(rollAxis, (flat * dt) / r);
+    }
+    if (grounded && vel.y === 0 && flat < 0.02) ball.moving = false;
+  });
 }
 
 function buildHeadphones() {
@@ -650,14 +792,15 @@ const CAM_EXIT = new THREE.Vector3(-0.35, 1.55, 2.4);
 const tmpA = new THREE.Vector3();
 const tmpB = new THREE.Vector3();
 
-const CAM_FUN = new THREE.Vector3(0.38, 1.52, 1.5);
-const FUN_LOOK = new THREE.Vector3(0.3, 0.98, -0.2);
+const CAM_FUN = new THREE.Vector3(0.1, 1.62, 1.75);
+const FUN_LOOK = new THREE.Vector3(0.18, 0.92, -0.25);
 const EXIT_LOOK = new THREE.Vector3(0.2, 1.0, -0.3);
 const tmpC = new THREE.Vector3();
 
 function updateRoom(p, time, dt) {
   const { group, lensMat } = room.headset;
   if (!reduceMotion) room.globe.sphere.rotation.y += dt * (hoveredProp === "travel" ? 1.4 : 0.25);
+  updateBalls(dt);
   if (p < P.roomSwitch) {
     const lift = smooth(range(p, 0.03, 0.2));
     const turn = smooth(range(p, 0.05, 0.2));
@@ -707,7 +850,7 @@ function updateProps(p, time) {
     const tag = funTags.find((el) => el.dataset.fun === prop.key);
     if (!tag) return;
     tmpC.copy(prop.anchor).project(camera);
-    const x = (tmpC.x * 0.5 + 0.5) * w;
+    const x = clamp((tmpC.x * 0.5 + 0.5) * w, 56, w - 56);
     const y = (-tmpC.y * 0.5 + 0.5) * h;
     const bob = reduceMotion ? 0 : Math.sin(time * 1.6 + i) * 4;
     tag.style.transform = `translate(${x.toFixed(1)}px, ${(y + bob).toFixed(1)}px) translate(-50%, -100%)`;
