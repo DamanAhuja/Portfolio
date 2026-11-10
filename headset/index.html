@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Daman Ahuja's portfolio as a VR headset: pick it up, put it on, and walk through his XR and airport software work.">
+  <title>Daman Ahuja · headset edition</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2305070a'/%3E%3Ccircle cx='11' cy='16' r='5' fill='%23d6ff4a'/%3E%3Ccircle cx='21' cy='16' r='5' fill='%23d6ff4a'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <canvas id="scene" aria-hidden="true"></canvas>
+  <div class="fade" id="fade" aria-hidden="true"></div>
+  <div class="vignette" id="vignette" aria-hidden="true"></div>
+
+  <header class="hud-top">
+    <a class="brand" href="#" data-jump="0">Daman Ahuja</a>
+    <nav class="jumps" aria-label="Jump to">
+      <button type="button" data-jump="0.30">Projects</button>
+      <button type="button" data-jump="0.79">Record</button>
+      <button type="button" data-jump="1">Contact</button>
+      <a href="../index.html">Simple version</a>
+    </nav>
+    <div class="progress" aria-hidden="true"><span id="progress-bar"></span></div>
+    <p class="phase" id="phase" aria-live="polite">Desk</p>
+  </header>
+
+  <div class="beats">
+    <section class="beat beat-intro" data-from="0" data-to="0.085">
+      <p class="eyebrow">Portfolio · headset edition</p>
+      <h1>Daman Ahuja</h1>
+      <p class="lede">I build XR products, and lately the software behind an airport’s buggy fleet. This version of my portfolio is a headset. Scroll to pick it up and put it on.</p>
+      <p class="aside">Prefer a normal page? <a href="../index.html">Open the simple version</a>.</p>
+      <p class="scroll-hint" aria-hidden="true"><span></span>Scroll</p>
+    </section>
+
+    <section class="beat beat-caption" data-from="0.09" data-to="0.2">
+      <p class="caption" id="lift-caption">Picking it up</p>
+    </section>
+
+    <section class="beat beat-boot" data-from="0.215" data-to="0.29">
+      <ol class="boot" id="boot">
+        <li>DAMAN OS · build 2027</li>
+        <li>6DoF tracking <span>ok</span></li>
+        <li>Guardian boundary <span>set</span></li>
+        <li>Loading 9 projects <span>ok</span></li>
+        <li>Welcome in.</li>
+      </ol>
+    </section>
+
+    <section class="beat beat-ring" data-from="0.295" data-to="0.745">
+      <p class="ring-hint">Scroll to turn · click a panel to open it</p>
+      <article class="hud-card" id="hud-card">
+        <p class="hud-index" id="hud-index">01 / 09</p>
+        <h2 id="hud-title">Smart Buggy</h2>
+        <p class="hud-org" id="hud-org">GMR Group</p>
+        <p class="hud-line" id="hud-line"></p>
+        <button type="button" class="hud-open" id="hud-open">Open project</button>
+      </article>
+    </section>
+
+    <section class="beat beat-record" data-from="0.78" data-to="0.865">
+      <article class="record-card">
+        <p class="eyebrow">Record</p>
+        <h2>Where the time went</h2>
+        <ol class="record">
+          <li><time>Jun 2026 — now</time><strong>AI and Automation Intern</strong><span>GMR Group, Smart Airport City</span></li>
+          <li><time>Sep 2026 — now</time><strong>Software Engineering Intern</strong><span>Tap4Technologies, remote</span></li>
+          <li><time>Feb 2024 — May 2026</time><strong>VR Development Intern</strong><span>University of Delhi</span></li>
+          <li><time>Feb 2024 — Oct 2025</time><strong>Founding member and CTO</strong><span>XRVisionLabs</span></li>
+          <li><time>Jan 2024 — Aug 2025</time><strong>Game developer</strong><span>AltReality Labs</span></li>
+          <li><time>Aug 2023 — Jul 2024</time><strong>Data Management Head</strong><span>Placement Cell, University of Delhi</span></li>
+        </ol>
+        <p class="record-note">B.Sc. (Hons.) Computer Science, University of Delhi, 2027. Spoke at AWE Nite Orlando. On the pedestal: a photogrammetry scan of a 310 server from my lab work.</p>
+      </article>
+    </section>
+
+    <section class="beat beat-exit" data-from="0.915" data-to="1.01">
+      <p class="eyebrow">Headset off</p>
+      <h2>That’s the tour.</h2>
+      <p class="lede">If you are building something in XR, at an airport, or anywhere a prototype has to become a product, write to me.</p>
+      <div class="exit-actions">
+        <a class="button" href="mailto:damanahuja09@gmail.com">damanahuja09@gmail.com</a>
+        <a href="https://www.linkedin.com/in/daman-ahuja/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/damanahuja" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://x.com/damanahuja09" target="_blank" rel="noopener">X</a>
+      </div>
+      <ul class="resume-row" aria-label="Resumes">
+        <li><a href="../Resumes/Daman_Ahuja_Software_Developer.pdf">Software resume</a></li>
+        <li><a href="../Resumes/Daman_Ahuja_AR_VR_Developer.pdf">AR / VR resume</a></li>
+        <li><a href="../Resumes/Daman_Ahuja_AI_ML.pdf">AI / ML resume</a></li>
+        <li><a href="../Resumes/Daman_Ahuja_Product_Manager.pdf">Product resume</a></li>
+      </ul>
+      <p class="aside"><a href="../index.html">Back to the simple version</a></p>
+    </section>
+  </div>
+
+  <div class="track" aria-hidden="true"></div>
+
+  <dialog class="dialog" id="dialog" aria-labelledby="dialog-title">
+    <button type="button" class="dialog-close" id="dialog-close" aria-label="Close">×</button>
+    <div class="dialog-media" id="dialog-media"></div>
+    <div class="dialog-copy">
+      <p class="hud-index" id="dialog-kicker"></p>
+      <h2 id="dialog-title"></h2>
+      <p class="hud-org" id="dialog-org"></p>
+      <div id="dialog-body"></div>
+      <p class="dialog-stack" id="dialog-stack"></p>
+      <div class="dialog-links" id="dialog-links"></div>
+    </div>
+  </dialog>
+
+  <div class="fallback" id="fallback" hidden>
+    <p class="eyebrow">Headset edition</p>
+    <h2 id="fallback-title">The 3D scene did not start.</h2>
+    <p id="fallback-body">Your browser could not load the headset scene.</p>
+    <a class="button" href="../index.html">Open the simple version</a>
+  </div>
+
+  <script>
+    setTimeout(function () {
+      if (window.__headset) return;
+      var fromDisk = location.protocol === "file:";
+      document.getElementById("fallback-title").textContent = fromDisk
+        ? "Open this page through a web server."
+        : "The 3D scene did not start.";
+      document.getElementById("fallback-body").textContent = fromDisk
+        ? "Browsers block 3D scripts on pages opened straight from a folder. Publish the site, or run a local server in the Portfolio folder (for example: python -m http.server) and open localhost:8000/headset/."
+        : "Your browser could not load the 3D libraries. The simple version has everything in it.";
+      document.getElementById("fallback").hidden = false;
+    }, 5000);
+  </script>
+</body>
+</html>
