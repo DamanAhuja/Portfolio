@@ -254,6 +254,7 @@ const DESK_TOP = 0.9;
 const DESK_BOUNDS = { minX: -1.27, maxX: 1.27, minZ: -0.97, maxZ: 0.28 };
 const DESK_OBSTACLES = [
   { x: 0.05, z: -0.15, r: 0.3 },
+  { x: -0.2, z: -0.55, r: 0.22 },
   { x: 0.85, z: -0.5, r: 0.3 },
   { x: 0.42, z: 0.16, r: 0.1 },
   { x: 0.98, z: 0.02, r: 0.14 },
@@ -885,32 +886,64 @@ function buildLaptop() {
   return group;
 }
 
+function faceShape(w, h, r, notchW, notchH) {
+  const shape = new THREE.Shape();
+  const x0 = -w / 2;
+  const y0 = -h / 2;
+  shape.moveTo(x0 + r, y0);
+  shape.lineTo(-notchW / 2, y0);
+  shape.quadraticCurveTo(-notchW * 0.18, y0 + notchH, 0, y0 + notchH);
+  shape.quadraticCurveTo(notchW * 0.18, y0 + notchH, notchW / 2, y0);
+  shape.lineTo(-x0 - r, y0);
+  shape.quadraticCurveTo(-x0, y0, -x0, y0 + r);
+  shape.lineTo(-x0, -y0 - r);
+  shape.quadraticCurveTo(-x0, -y0, -x0 - r, -y0);
+  shape.lineTo(x0 + r, -y0);
+  shape.quadraticCurveTo(x0, -y0, x0, -y0 - r);
+  shape.lineTo(x0, y0 + r);
+  shape.quadraticCurveTo(x0, y0, x0 + r, y0);
+  return shape;
+}
+
+function faceSlab(shape, depth, bevel, material) {
+  const geometry = new THREE.ExtrudeGeometry(shape, {
+    depth,
+    bevelEnabled: true,
+    bevelThickness: bevel,
+    bevelSize: bevel,
+    bevelSegments: 5,
+    curveSegments: 18
+  });
+  return new THREE.Mesh(geometry, material);
+}
+
 function buildHeadset() {
   const group = new THREE.Group();
   const shellMat = new THREE.MeshPhysicalMaterial({ color: 0xefe8d8, roughness: 0.45, clearcoat: 0.35 });
-  const shell = new THREE.Mesh(new RoundedBoxGeometry(0.6, 0.34, 0.28, 6, 0.09), shellMat);
+  // Extruded slabs span z from -bevel to depth + bevel, so each z offset puts its back face at the value noted.
+  const shell = faceSlab(faceShape(0.52, 0.24, 0.07, 0.15, 0.075), 0.12, 0.04, shellMat);
+  shell.position.z = -0.06;
 
-  const visor = new THREE.Mesh(
-    new RoundedBoxGeometry(0.56, 0.29, 0.05, 6, 0.04),
+  const visor = faceSlab(
+    faceShape(0.49, 0.2, 0.06, 0.13, 0.05),
+    0.01,
+    0.015,
     new THREE.MeshPhysicalMaterial({ color: 0x090a08, roughness: 0.12, metalness: 0.4, clearcoat: 1, clearcoatRoughness: 0.05 })
   );
-  visor.position.z = 0.135;
+  visor.position.z = 0.105;
 
   const sensorMat = new THREE.MeshStandardMaterial({ color: 0x2b2d2a, roughness: 0.3, metalness: 0.5 });
-  for (const [x, y] of [[-0.21, 0.09], [0.21, 0.09], [-0.21, -0.09], [0.21, -0.09]]) {
-    const sensor = new THREE.Mesh(new THREE.CircleGeometry(0.016, 24), sensorMat);
-    sensor.position.set(x, y, 0.0265);
-    visor.add(sensor);
+  for (const [x, y] of [[-0.2, 0.065], [0.2, 0.065], [-0.2, -0.055], [0.2, -0.055]]) {
+    const sensor = new THREE.Mesh(new THREE.CircleGeometry(0.014, 24), sensorMat);
+    sensor.position.set(x, y, 0.1315);
+    group.add(sensor);
   }
 
-  const stripe = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.012, 0.01), new THREE.MeshBasicMaterial({ color: SIGNAL }));
-  stripe.position.set(0, 0.155, 0.13);
+  const stripe = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.006, 0.03), new THREE.MeshBasicMaterial({ color: SIGNAL }));
+  stripe.position.set(0, 0.151, 0.05);
 
-  const foam = new THREE.Mesh(
-    new RoundedBoxGeometry(0.54, 0.29, 0.09, 6, 0.04),
-    new THREE.MeshStandardMaterial({ color: 0x34352f, roughness: 1 })
-  );
-  foam.position.z = -0.16;
+  const foam = faceSlab(faceShape(0.48, 0.22, 0.07, 0.15, 0.08), 0.06, 0.02, new THREE.MeshStandardMaterial({ color: 0x34352f, roughness: 1 }));
+  foam.position.z = -0.18;
 
   const lensMat = new THREE.MeshStandardMaterial({ color: 0x050605, emissive: SIGNAL, emissiveIntensity: 0.08, roughness: 0.15, metalness: 0.2 });
   const rimMat = new THREE.MeshStandardMaterial({ color: 0x111210, roughness: 0.6 });
@@ -924,21 +957,38 @@ function buildHeadset() {
     group.add(lens, rim);
   }
 
-  const strapMat = new THREE.MeshStandardMaterial({ color: 0x23241f, roughness: 0.8 });
-  const strap = new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.018, 12, 48, Math.PI), strapMat);
-  strap.rotation.x = -Math.PI / 2 - 0.75;
-  strap.scale.set(1, 1.35, 1);
-  strap.position.set(0, 0.04, -0.08);
+  const strapMat = new THREE.MeshStandardMaterial({ color: 0x4a4c46, roughness: 0.85, transparent: true });
+  const straps = new THREE.Group();
+  const loopPoints = [];
+  for (let i = 0; i < 24; i++) {
+    const a = (i / 24) * Math.PI * 2;
+    const z = -0.34 + Math.cos(a) * 0.3;
+    loopPoints.push(new THREE.Vector3(Math.sin(a) * 0.27, (z + 0.06) * 0.22, z));
+  }
+  const loop = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(loopPoints, true), 96, 0.016, 10, true), strapMat);
+  const top = new THREE.Mesh(
+    new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0, 0.14, -0.06),
+      new THREE.Vector3(0, 0.25, -0.24),
+      new THREE.Vector3(0, 0.2, -0.48),
+      new THREE.Vector3(0, -0.09, -0.63)
+    ]), 48, 0.014, 10, false),
+    strapMat
+  );
+  const cradle = new THREE.Mesh(new RoundedBoxGeometry(0.17, 0.1, 0.035, 4, 0.015), strapMat);
+  cradle.position.set(0, -0.1, -0.64);
+  cradle.rotation.x = -0.2;
+  straps.add(loop, top, cradle);
 
-  group.add(shell, visor, stripe, foam, strap);
+  group.add(shell, visor, stripe, foam, straps);
   group.traverse((obj) => {
     if (obj.isMesh) obj.castShadow = true;
   });
 
-  return { group, lensMat };
+  return { group, lensMat, strapMat };
 }
 
-const H_REST = new THREE.Vector3(0.05, 1.075, -0.15);
+const H_REST = new THREE.Vector3(0.05, 1.057, -0.15);
 const H_UP = new THREE.Vector3(0, 1.4, 0.75);
 const CAM_START = new THREE.Vector3(1.15, 1.7, 2.9);
 const CAM_END = new THREE.Vector3(0, 1.4, 0.75 + 0.206 + 0.2);
@@ -960,8 +1010,10 @@ function updateRoom(p, time, dt) {
     const lift = smooth(range(p, 0.03, 0.2));
     const turn = smooth(range(p, 0.05, 0.2));
     group.position.lerpVectors(H_REST, H_UP, lift);
-    group.rotation.set(lerp(-0.04, 0, lift), lerp(0.6, Math.PI, turn), lerp(0.05, 0, lift));
+    group.rotation.set(lerp(0.05, 0, lift), lerp(0.6, Math.PI, turn), 0);
     if (p < 0.03) group.position.y += Math.sin(time * 1.4) * 0.004;
+    room.headset.strapMat.opacity = 1 - smooth(range(p, 0.185, 0.21));
+    room.headset.strapMat.visible = room.headset.strapMat.opacity > 0.01;
 
     const approach = range(p, 0, 0.235);
     camera.position.lerpVectors(CAM_START, CAM_END, smooth(approach) * 0.35 + Math.pow(approach, 3) * 0.65);
@@ -972,7 +1024,9 @@ function updateRoom(p, time, dt) {
     updateProps(p, time);
   } else {
     group.position.copy(H_REST);
-    group.rotation.set(-0.04, 0.6, 0.05);
+    group.rotation.set(0.05, 0.6, 0);
+    room.headset.strapMat.opacity = 1;
+    room.headset.strapMat.visible = true;
     lensMat.emissiveIntensity = 0.1;
     const poke = (time - headsetPoke) / 0.9;
     if (poke >= 0 && poke < 1) {
@@ -1196,7 +1250,7 @@ function buildExhibit(kind, holder) {
   } else if (kind === "headset") {
     const mini = buildHeadset();
     mini.group.scale.setScalar(1.05);
-    mini.group.position.y = 0.35;
+    mini.group.position.set(0, 0.35, 0.25);
     mini.lensMat.emissiveIntensity = 1.2;
     spin.add(mini.group);
     animate = (time) => { mini.group.position.y = 0.35 + Math.sin(time * 1.5) * 0.03; };
