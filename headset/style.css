@@ -805,7 +805,3 @@ body.is-hovering-panel { cursor: pointer; }
   .fun-tag { padding: 7px 11px; font-size: 0.72rem; }
   .exit-actions .button { overflow-wrap: anywhere; }
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .scroll-hint span { animation: none; }
-}

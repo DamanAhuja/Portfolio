@@ -449,10 +449,3 @@ img { max-width: 100%; display: block; }
 
   .hero-line { top: 30%; white-space: normal; width: 80vw; text-align: center; }
 }
-
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .hero-down { animation: none; }
-  .js .reveal { opacity: 1; transform: none; transition: none; }
-  .work-shot { transition: none; }
-}

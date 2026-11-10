@@ -1,9 +1,49 @@
 document.documentElement.classList.add("js");
 
-document.addEventListener("DOMContentLoaded", () => {
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const AUDIENCES = {
+  software: {
+    resume: "Daman_Ahuja_Software_Developer.pdf",
+    order: ["buggy", "carbon", "attendance", "teletwin", "xrchitect", "topology", "arnav", "combat", "motion"]
+  },
+  xr: {
+    resume: "Daman_Ahuja_AR_VR_Developer.pdf",
+    order: ["xrchitect", "topology", "combat", "motion", "arnav", "teletwin", "buggy", "carbon", "attendance"]
+  },
+  ai: {
+    resume: "Daman_Ahuja_AI_ML.pdf",
+    order: ["teletwin", "motion", "buggy", "topology", "combat", "carbon", "attendance", "arnav", "xrchitect"]
+  },
+  product: {
+    resume: "Daman_Ahuja_Product_Manager.pdf",
+    order: ["buggy", "xrchitect", "topology", "carbon", "attendance", "teletwin", "arnav", "combat", "motion"]
+  }
+};
 
-  if (reduceMotion || !("IntersectionObserver" in window)) {
+function readAudience() {
+  const tag = new URLSearchParams(location.search).get("for");
+  if (AUDIENCES[tag]) {
+    sessionStorage.setItem("audience", tag);
+    return AUDIENCES[tag];
+  }
+  return AUDIENCES[sessionStorage.getItem("audience")] || AUDIENCES.software;
+}
+
+function applyAudience() {
+  const audience = readAudience();
+  document.querySelectorAll("[data-resume]").forEach((link) => {
+    link.href = `Resumes/${audience.resume}`;
+  });
+  const works = document.querySelector(".works");
+  if (!works) return;
+  const rank = (article) => audience.order.indexOf(article.querySelector(".work-more").id.replace("more-", ""));
+  Array.from(works.querySelectorAll(".work"))
+    .sort((a, b) => rank(a) - rank(b))
+    .forEach((article) => works.appendChild(article));
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  applyAudience();
+  if (!("IntersectionObserver" in window)) {
     document.querySelectorAll(".reveal").forEach((element) => element.classList.add("visible"));
   } else {
     const observer = new IntersectionObserver(
@@ -32,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  animateFloor(reduceMotion);
+  animateFloor();
 });
 
 function mountVideo(panel) {
@@ -50,7 +90,7 @@ function mountVideo(panel) {
   panel.prepend(holder);
 }
 
-function animateFloor(reduceMotion) {
+function animateFloor() {
   const buggies = Array.from(document.querySelectorAll(".buggy"));
   if (!buggies.length) return;
 
@@ -61,8 +101,6 @@ function animateFloor(reduceMotion) {
     routes.set(buggy, { path, length: path.getTotalLength() });
     place(buggy, Number(buggy.dataset.start || 0));
   });
-
-  if (reduceMotion) return;
 
   const started = performance.now();
   const frame = (now) => {

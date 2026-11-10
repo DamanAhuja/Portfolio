@@ -6,7 +6,6 @@ window.__headset = true;
 
 const SIGNAL = 0xd6ff4a;
 const SIGNAL_CSS = "#d6ff4a";
-const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
 
 const PROJECTS = [
@@ -117,6 +116,36 @@ const PROJECTS = [
     links: [{ label: "Open the GitHub repo", href: "https://github.com/DamanAhuja/TeleBot" }]
   }
 ];
+
+const AUDIENCES = {
+  software: {
+    resume: "Daman_Ahuja_Software_Developer.pdf",
+    order: ["Smart Buggy", "Carbon", "TeleAttendance", "TeleTwin", "XRchitect", "TopologyXR", "AR Navigation", "Combat-XR", "Motion Tracking"]
+  },
+  xr: {
+    resume: "Daman_Ahuja_AR_VR_Developer.pdf",
+    order: ["XRchitect", "TopologyXR", "Combat-XR", "Motion Tracking", "AR Navigation", "TeleTwin", "Smart Buggy", "Carbon", "TeleAttendance"]
+  },
+  ai: {
+    resume: "Daman_Ahuja_AI_ML.pdf",
+    order: ["TeleTwin", "Motion Tracking", "Smart Buggy", "TopologyXR", "Combat-XR", "Carbon", "TeleAttendance", "AR Navigation", "XRchitect"]
+  },
+  product: {
+    resume: "Daman_Ahuja_Product_Manager.pdf",
+    order: ["Smart Buggy", "XRchitect", "TopologyXR", "Carbon", "TeleAttendance", "TeleTwin", "AR Navigation", "Combat-XR", "Motion Tracking"]
+  }
+};
+
+const audience = (() => {
+  const tag = new URLSearchParams(location.search).get("for");
+  if (AUDIENCES[tag]) {
+    sessionStorage.setItem("audience", tag);
+    return AUDIENCES[tag];
+  }
+  return AUDIENCES[sessionStorage.getItem("audience")] || AUDIENCES.xr;
+})();
+PROJECTS.sort((a, b) => audience.order.indexOf(a.title) - audience.order.indexOf(b.title));
+document.getElementById("resume-link").href = `../Resumes/${audience.resume}`;
 
 const RECORD = [
   {
@@ -316,7 +345,7 @@ window.addEventListener("resize", () => {
 
 function jumpTo(p) {
   const max = document.documentElement.scrollHeight - window.innerHeight;
-  window.scrollTo({ top: p * max, behavior: reduceMotion ? "auto" : "smooth" });
+  window.scrollTo({ top: p * max, behavior: "smooth" });
 }
 
 let autoScroll = 0;
@@ -404,7 +433,7 @@ renderer.setAnimationLoop(frame);
 function frame() {
   const dt = Math.min(clock.getDelta(), 0.05);
   const time = clock.elapsedTime;
-  progress += (target - progress) * (reduceMotion ? 1 : 1 - Math.pow(0.002, dt));
+  progress += (target - progress) * (1 - Math.pow(0.002, dt));
   const p = progress;
 
   progressBar.style.width = `${(p * 100).toFixed(2)}%`;
@@ -925,14 +954,14 @@ const tmpC = new THREE.Vector3();
 function updateRoom(p, time, dt) {
   const { group, lensMat } = room.headset;
   if (hoveredProp === "travel") room.globe.sphere.rotation.y += dt * 1.4;
-  else if (!reduceMotion) room.globe.sphere.rotation.y += dt * 0.25;
+  else room.globe.sphere.rotation.y += dt * 0.25;
   updateBalls(dt);
   if (p < P.roomSwitch) {
     const lift = smooth(range(p, 0.03, 0.2));
     const turn = smooth(range(p, 0.05, 0.2));
     group.position.lerpVectors(H_REST, H_UP, lift);
     group.rotation.set(lerp(-0.04, 0, lift), lerp(0.6, Math.PI, turn), lerp(0.05, 0, lift));
-    if (!reduceMotion && p < 0.03) group.position.y += Math.sin(time * 1.4) * 0.004;
+    if (p < 0.03) group.position.y += Math.sin(time * 1.4) * 0.004;
 
     const approach = range(p, 0, 0.235);
     camera.position.lerpVectors(CAM_START, CAM_END, smooth(approach) * 0.35 + Math.pow(approach, 3) * 0.65);
@@ -951,7 +980,7 @@ function updateRoom(p, time, dt) {
       group.rotation.y += smooth(poke) * Math.PI * 2;
       lensMat.emissiveIntensity = 0.1 + Math.sin(poke * Math.PI) * 2.4;
     }
-    const drift = reduceMotion ? 0 : Math.sin(time * 0.3) * 0.06;
+    const drift = Math.sin(time * 0.3) * 0.06;
     const leave = smooth(range(p, P.funEnd, P.funEnd + 0.015));
     camera.position.lerpVectors(CAM_FUN, CAM_EXIT, leave);
     camera.position.x += drift;
@@ -997,7 +1026,7 @@ function updateProps(p, time) {
     if (prop.group) {
       const s = prop.key === hit ? 1.12 : 1;
       prop.group.scale.lerp(tmpB.set(s, s, s), 0.15);
-      if (prop.key === "games" && !reduceMotion) prop.group.position.y = 0.9 + (hit === "games" ? 0.03 + Math.sin(time * 6) * 0.006 : 0);
+      if (prop.key === "games") prop.group.position.y = 0.9 + (hit === "games" ? 0.03 + Math.sin(time * 6) * 0.006 : 0);
     }
     if (!prop.anchor) return;
     const tag = funTags.find((el) => el.dataset.fun === prop.key);
@@ -1005,7 +1034,7 @@ function updateProps(p, time) {
     tmpC.copy(prop.anchor).project(camera);
     const x = clamp((tmpC.x * 0.5 + 0.5) * w, 56, w - 56);
     const y = (-tmpC.y * 0.5 + 0.5) * h;
-    const bob = reduceMotion ? 0 : Math.sin(time * 1.6 + i) * 4;
+    const bob = Math.sin(time * 1.6 + i) * 4;
     tag.style.transform = `translate(${x.toFixed(1)}px, ${(y + bob).toFixed(1)}px) translate(-50%, -100%)`;
     tag.classList.toggle("is-hot", prop.key === hit);
   });
@@ -1170,7 +1199,7 @@ function buildExhibit(kind, holder) {
     mini.group.position.y = 0.35;
     mini.lensMat.emissiveIntensity = 1.2;
     spin.add(mini.group);
-    animate = (time) => { mini.group.position.y = 0.35 + (reduceMotion ? 0 : Math.sin(time * 1.5) * 0.03); };
+    animate = (time) => { mini.group.position.y = 0.35 + Math.sin(time * 1.5) * 0.03; };
   } else if (kind === "target") {
     const face = new THREE.Group();
     [[0.3, 0xefe8d8], [0.24, 0x1d1e1b], [0.18, 0x3d7ea6], [0.12, 0xc0392b], [0.06, 0xf4d03f]].forEach(([r, color], i) => {
@@ -1209,7 +1238,7 @@ function buildExhibit(kind, holder) {
   spin.traverse((obj) => { if (obj.isMesh) obj.castShadow = true; });
   return {
     animate: (time, dt) => {
-      if (!reduceMotion) spin.rotation.y += dt * 0.35;
+      spin.rotation.y += dt * 0.35;
       animate(time, dt);
     }
   };
@@ -1229,7 +1258,7 @@ function updateVR(p, time, dt) {
   const base = Math.floor(x);
   const eased = Math.min(n - 1, base + smooth(range(x - base, 0.3, 0.7)));
   const targetYaw = -eased * vr.step;
-  if (!yawReady || reduceMotion) {
+  if (!yawReady) {
     yaw = targetYaw;
     yawReady = true;
   } else {
@@ -1261,7 +1290,7 @@ function updateVR(p, time, dt) {
   LOOK.lerpVectors(tmpB, REC_LOOK, lab);
   camera.lookAt(LOOK);
 
-  const scan = reduceMotion ? 0.5 : Math.sin(time * 1.6) * 0.5 + 0.5;
+  const scan = Math.sin(time * 1.6) * 0.5 + 0.5;
   vr.pedestals.forEach((pedestal, i) => {
     const rise = smooth(range(p, P.labStart + i * 0.003, P.labStart + 0.014 + i * 0.003));
     pedestal.group.position.y = lerp(-3, 0, rise);
@@ -1270,7 +1299,7 @@ function updateVR(p, time, dt) {
   });
   vr.panels.forEach((panel) => { panel.front.material.opacity = 1 - lab * 0.7; });
 
-  if (!reduceMotion) vr.dust.rotation.y += dt * 0.01;
+  vr.dust.rotation.y += dt * 0.01;
 
   const inRing = inRingRange(p);
   let hit = null;
@@ -1288,7 +1317,7 @@ function updateVR(p, time, dt) {
     const hover = i === hit ? 1 : 0;
     const s = 1 + focus * 0.05 + hover * 0.05;
     panel.group.scale.lerp(tmpB.set(s, s, s), 0.12);
-    panel.group.position.y = panel.baseY + (reduceMotion ? 0 : Math.sin(time * 0.8 + i * 1.3) * 0.035);
+    panel.group.position.y = panel.baseY + Math.sin(time * 0.8 + i * 1.3) * 0.035;
   });
 
   if (p < P.ringStart) {
@@ -1320,7 +1349,7 @@ recHud.pins.replaceChildren(...RECORD.map((entry, i) => {
   pin.addEventListener("click", () => {
     const max = document.documentElement.scrollHeight - window.innerHeight;
     const at = P.recStart + (i / (RECORD.length - 1)) * (P.recEnd - P.recStart);
-    window.scrollTo({ top: at * max, behavior: reduceMotion ? "auto" : "smooth" });
+    window.scrollTo({ top: at * max, behavior: "smooth" });
   });
   return pin;
 }));
