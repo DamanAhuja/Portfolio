@@ -5,431 +5,456 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta
     name="description"
-    content="Daman Ahuja is a software developer and XR engineer building immersive products, computer vision prototypes, and practical developer tools."
+    content="Daman Ahuja builds airport dispatch software at GMR, CRM integrations for an AI business OS, and XR products. Computer Science student at Delhi University and former CTO of XRVisionLabs."
   >
-  <title>Daman Ahuja | Portfolio</title>
+  <title>Daman Ahuja</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2310110e'/%3E%3Crect x='4' y='4' width='24' height='24' rx='4' fill='%23d6ff4a'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,560;0,9..144,680;1,9..144,560&family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@380;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
 <body>
-  <div class="site-shell">
-    <header class="topbar">
-      <a class="brand" href="#home">
-        <span class="brand-mark">DA</span>
-        <span class="brand-text">Daman Ahuja</span>
-      </a>
+  <a class="skip" href="#work">Skip to work</a>
 
-      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation">
-        <span></span>
-        <span></span>
-      </button>
+  <header class="topbar">
+    <a class="brand" href="#top">
+      <span class="brand-mark" aria-hidden="true"></span>
+      Daman Ahuja
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation">
+      <span></span>
+      <span></span>
+    </button>
+    <nav id="site-nav" class="site-nav" aria-label="Primary">
+      <a href="#work">Work</a>
+      <a href="#record">Record</a>
+      <a href="#lab">Lab</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
 
-      <nav id="site-nav" class="site-nav" aria-label="Primary">
-        <a href="#about">About</a>
-        <a href="#projects">Projects</a>
-        <a href="#experience">Experience</a>
-        <a href="#research">Research</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </header>
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy reveal">
+        <p class="eyebrow">
+          <span class="live" aria-hidden="true"></span>
+          Delhi University · now at IGI Airport
+        </p>
+        <h1>Smart Buggy at Terminal 3. <em>XR products before that.</em></h1>
+        <p class="dek">
+          I am a final-year computer science student. At GMR’s Smart Airport City I build the Android apps for Smart Buggy, the system that dispatches buggies to passengers with reduced mobility. I also integrate CRM tools into Carbon, an AI business OS at Tap4. From 2024 to 2025 I was founding CTO at XRVisionLabs.
+        </p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#work">See the work</a>
+          <a class="button button-secondary" href="mailto:damanahuja09@gmail.com">Email me</a>
+        </div>
+        <ul class="resume-row" aria-label="Resumes">
+          <li><a href="Resumes/Daman_Ahuja_Software_Developer.pdf">Software</a></li>
+          <li><a href="Resumes/Daman_Ahuja_AR_VR_Developer.pdf">AR / VR</a></li>
+          <li><a href="Resumes/Daman_Ahuja_AI_ML.pdf">AI / ML</a></li>
+          <li><a href="Resumes/Daman_Ahuja_Product_Manager.pdf">Product</a></li>
+        </ul>
+      </div>
 
-    <main>
-      <section id="home" class="hero section">
-        <div class="hero-copy reveal">
-          <p class="eyebrow">Software Developer and XR Engineer</p>
-          <h1>I build XR products, research prototypes, and software that people can actually use.</h1>
-          <p class="hero-summary">
-            I am a Computer Science student at Delhi University and former CTO at XRVisionLabs. Most of my work has been
-            in XR, Unity, computer vision, and product-heavy builds where the brief is messy and the turnaround is fast.
-          </p>
+      <figure class="portrait reveal">
+        <img src="Damn.jpg" alt="Daman Ahuja" width="640" height="800">
+        <figcaption>
+          <span>Daman Ahuja</span>
+          B.Sc. Computer Science, 2027
+        </figcaption>
+      </figure>
+    </section>
 
-          <div class="hero-actions">
-            <a class="button button-primary" href="Daman Ahuja - Resume.pdf" target="_blank" rel="noopener">
-              View Resume
-            </a>
-            <a class="button button-secondary" href="mailto:damanahuja09@gmail.com">
-              Email Me
-            </a>
-          </div>
+    <section class="floor-section reveal" aria-labelledby="floor-title">
+      <div class="floor-head">
+        <h2 id="floor-title">A sketch of the dispatch loop</h2>
+        <p>Illustration of the rules in the Smart Buggy build. The buggies on this floor are not a live airport feed.</p>
+      </div>
 
-          <div class="hero-links">
-            <a href="https://www.linkedin.com/in/daman-ahuja/" target="_blank" rel="noopener">
-              <i class="fab fa-linkedin"></i>
-              LinkedIn
-            </a>
-            <a href="https://github.com/damanahuja" target="_blank" rel="noopener">
-              <i class="fab fa-github"></i>
-              GitHub
-            </a>
-            <a href="https://x.com/damanahuja09" target="_blank" rel="noopener">
-              <i class="fab fa-x-twitter"></i>
-              X
-            </a>
-          </div>
+      <div class="floor-layout">
+        <div class="floor-canvas">
+          <svg class="floor-svg" viewBox="0 0 920 500" role="img" aria-label="Illustrated two-level terminal floor with three buggies moving between gates">
+            <rect class="floor-bg" width="920" height="500" rx="28"></rect>
+            <text class="svg-label" x="36" y="40">T3 · TWO FLOORS · 109 GATES AND POINTS</text>
+            <text class="svg-label svg-label-right" x="884" y="40">ILLUSTRATION</text>
+
+            <g class="pier">
+              <rect x="32" y="68" width="856" height="160" rx="22"></rect>
+              <text class="svg-quiet" x="52" y="98">UPPER FLOOR</text>
+            </g>
+            <g class="pier">
+              <rect x="32" y="272" width="856" height="160" rx="22"></rect>
+              <text class="svg-quiet" x="52" y="302">LOWER FLOOR</text>
+            </g>
+            <rect class="spine" x="438" y="210" width="44" height="80" rx="8"></rect>
+
+            <g class="gates" fill="currentColor">
+              <rect x="78" y="78" width="18" height="8"></rect>
+              <rect x="148" y="78" width="18" height="8"></rect>
+              <rect x="218" y="78" width="18" height="8"></rect>
+              <rect x="288" y="78" width="18" height="8"></rect>
+              <rect x="358" y="78" width="18" height="8"></rect>
+              <rect x="500" y="78" width="18" height="8"></rect>
+              <rect x="570" y="78" width="18" height="8"></rect>
+              <rect x="640" y="78" width="18" height="8"></rect>
+              <rect x="710" y="78" width="18" height="8"></rect>
+              <rect x="780" y="78" width="18" height="8"></rect>
+              <rect x="78" y="410" width="18" height="8"></rect>
+              <rect x="148" y="410" width="18" height="8"></rect>
+              <rect x="218" y="410" width="18" height="8"></rect>
+              <rect x="288" y="410" width="18" height="8"></rect>
+              <rect x="358" y="410" width="18" height="8"></rect>
+              <rect x="500" y="410" width="18" height="8"></rect>
+              <rect x="570" y="410" width="18" height="8"></rect>
+              <rect x="640" y="410" width="18" height="8"></rect>
+              <rect x="710" y="410" width="18" height="8"></rect>
+              <rect x="780" y="410" width="18" height="8"></rect>
+            </g>
+
+            <path id="route-upper" class="route" d="M96 148 H824"></path>
+            <path id="route-lower" class="route" d="M824 352 H96"></path>
+            <path id="route-link" class="route" d="M150 148 H460 V352 H790"></path>
+
+            <circle class="buggy" data-route="route-upper" data-speed="0.00011" data-start="0.08" r="8"></circle>
+            <circle class="buggy" data-route="route-lower" data-speed="0.00008" data-start="0.42" r="8"></circle>
+            <circle class="buggy buggy-pool" data-route="route-link" data-speed="0.00007" data-start="0.2" r="9"></circle>
+          </svg>
         </div>
 
-        <div class="hero-visual reveal">
-          <div class="portrait-card">
-            <img src="Damn.jpg" alt="Portrait of Daman Ahuja" class="profile-img">
-            <div class="portrait-caption">
-              <span>Focus Areas</span>
-              <strong>XR, Unity, computer vision, product engineering</strong>
+        <aside class="readout">
+          <p class="readout-kicker">Rules in the build</p>
+          <dl>
+            <div><dt>Position</dt><dd>MQTT every 1s</dd></div>
+            <div><dt>Heartbeat</dt><dd>under 15s</dd></div>
+            <div><dt>Battery</dt><dd>above 30%</dd></div>
+            <div><dt>Pooling</dt><dd>up to 5 seats</dd></div>
+            <div><dt>Offer</dt><dd>15s, then a 12s countdown</dd></div>
+            <div><dt>Kiosk</dt><dd>polls every 5s</dd></div>
+          </dl>
+          <p class="floor-log" aria-live="polite">Buggy on duty · battery above the cutoff · heartbeat fresh</p>
+        </aside>
+      </div>
+    </section>
+
+    <section id="work" class="section">
+      <div class="section-intro reveal">
+        <p class="eyebrow">Selected work</p>
+        <h2>Eight pieces. The stage follows the one you pick.</h2>
+      </div>
+
+      <div class="work-layout">
+        <div class="case-list" role="tablist" aria-label="Projects" aria-orientation="vertical">
+          <button class="case-tab" role="tab" id="tab-buggy" aria-controls="case-buggy" aria-selected="true" tabindex="0">
+            <span>01</span>
+            <span><strong>Smart Buggy</strong><small>GMR · Terminal 3</small></span>
+          </button>
+          <button class="case-tab" role="tab" id="tab-carbon" aria-controls="case-carbon" aria-selected="false" tabindex="-1">
+            <span>02</span>
+            <span><strong>Carbon</strong><small>Tap4 · AI business OS</small></span>
+          </button>
+          <button class="case-tab" role="tab" id="tab-xrchitect" aria-controls="case-xrchitect" aria-selected="false" tabindex="-1">
+            <span>03</span>
+            <span><strong>XRchitect</strong><small>Multiplayer VR interiors</small></span>
+          </button>
+          <button class="case-tab" role="tab" id="tab-combat" aria-controls="case-combat" aria-selected="false" tabindex="-1">
+            <span>04</span>
+            <span><strong>Combat-XR</strong><small>Defence training</small></span>
+          </button>
+          <button class="case-tab" role="tab" id="tab-teletwin" aria-controls="case-teletwin" aria-selected="false" tabindex="-1">
+            <span>05</span>
+            <span><strong>TeleTwin</strong><small>Telecom digital twin</small></span>
+          </button>
+          <button class="case-tab" role="tab" id="tab-arnav" aria-controls="case-arnav" aria-selected="false" tabindex="-1">
+            <span>06</span>
+            <span><strong>AR navigation</strong><small>Browser wayfinding</small></span>
+          </button>
+          <button class="case-tab" role="tab" id="tab-topology" aria-controls="case-topology" aria-selected="false" tabindex="-1">
+            <span>07</span>
+            <span><strong>TopologyXR</strong><small>Data center planning</small></span>
+          </button>
+          <button class="case-tab" role="tab" id="tab-attendance" aria-controls="case-attendance" aria-selected="false" tabindex="-1">
+            <span>08</span>
+            <span><strong>TeleAttendance</strong><small>Telegram automation</small></span>
+          </button>
+        </div>
+
+        <div class="stage">
+          <article class="case is-active" id="case-buggy" role="tabpanel" aria-labelledby="tab-buggy">
+            <div class="case-media spec-media">
+              <p class="media-kicker">Four apps, one ride</p>
+              <ol class="flow">
+                <li>Kiosk request</li>
+                <li>Four-tier allocator</li>
+                <li>Driver offer</li>
+                <li>Board, start, drop</li>
+              </ol>
+              <p class="media-note">Passenger kiosk, driver tablet, dispatch engine, admin portal. Indoor position comes from BLE beacons on a surveyed floor of 109 gates and points.</p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="metrics reveal">
-        <article class="metric-card">
-          <span class="metric-label">Leadership</span>
-          <strong>Ex-CTO at XRVisionLabs</strong>
-          <p>Led product delivery across XR and AI projects with engineering, client, and execution ownership.</p>
-        </article>
-        <article class="metric-card">
-          <span class="metric-label">Research</span>
-          <strong>Delhi University intern</strong>
-          <p>Worked on motion tracking, Kinect-based pose systems, and immersive interaction experiments.</p>
-        </article>
-        <article class="metric-card">
-          <span class="metric-label">Execution</span>
-          <strong>From idea to shipped demo</strong>
-          <p>Built products for interior design, digital twins, defense training, and workflow automation.</p>
-        </article>
-      </section>
-
-      <section id="about" class="section">
-        <div class="section-intro reveal">
-          <p class="eyebrow">Why Me</p>
-          <h2>I like owning the whole thing, not just my piece of it.</h2>
-          <p>
-            This portfolio is a mix of shipped work, applied research, and the kind of projects where you have to move
-            between product thinking, technical implementation, and presenting the work clearly to other people.
-          </p>
-        </div>
-
-        <div class="strength-grid">
-          <article class="info-card reveal">
-            <h3>Fast ramp-up</h3>
-            <p>I have already worked across Unity, WebXR, backend automation, digital twins, AI-assisted experiences, and research tooling.</p>
-          </article>
-          <article class="info-card reveal">
-            <h3>End-to-end mindset</h3>
-            <p>I can move from figuring out the problem to prototyping, shipping, presenting, and tightening the result after feedback.</p>
-          </article>
-          <article class="info-card reveal">
-            <h3>Team-ready communication</h3>
-            <p>Client collaboration, public speaking, and cross-functional work are already part of how I operate.</p>
-          </article>
-        </div>
-
-        <div class="skill-cluster reveal" aria-label="Skills">
-          <span>JavaScript</span>
-          <span>Node.js</span>
-          <span>C#</span>
-          <span>Unity</span>
-          <span>WebXR</span>
-          <span>AR/VR/MR</span>
-          <span>Unreal Engine</span>
-          <span>Computer Vision</span>
-          <span>Problem Solving</span>
-          <span>Project Management</span>
-          <span>Leadership</span>
-          <span>Rapid Prototyping</span>
-        </div>
-      </section>
-
-      <section id="projects" class="section">
-        <div class="section-intro reveal">
-          <p class="eyebrow">Selected Work</p>
-          <h2>A few projects that show how I work.</h2>
-          <p>
-            These are the projects that feel most representative: shipped XR work, applied experiments, and a few smaller
-            builds that show range without padding the page.
-          </p>
-        </div>
-
-        <div class="project-grid">
-          <article class="project-card reveal featured">
-            <div class="media-frame">
-              <iframe src="https://www.youtube.com/embed/nA4qaKeVBL8" title="XRchitect demo" loading="lazy" allowfullscreen></iframe>
+            <div class="case-copy">
+              <h3>Smart Buggy</h3>
+              <p>The driver tablet and passenger kiosk are Kotlin and Jetpack Compose. The tablet publishes indoor position, battery, and seats over MQTT every second, and walks the trip through the Node.js engine. A buggy with a stale heartbeat, a low battery, or a charging state drops out of the pool. Riders headed to the same pier share a vehicle, up to five seats, before an idle buggy is called.</p>
+              <p>I also built an ARCore proof of concept that checked the airport’s vendor-led AR wayfinding flow before rollout.</p>
+              <p class="stack">Kotlin · Jetpack Compose · Node.js · MQTT · PostgreSQL · ARCore · Situm</p>
             </div>
-            <div class="project-body">
-              <div class="tag-row">
-                <span>VR</span>
-                <span>Product</span>
-                <span>Meta Store</span>
+          </article>
+
+          <article class="case" id="case-carbon" role="tabpanel" aria-labelledby="tab-carbon" hidden>
+            <div class="case-media spec-media">
+              <p class="media-kicker">First integration slice</p>
+              <div class="bridge">
+                <div>Mailchimp<small>audiences</small></div>
+                <span aria-hidden="true">→</span>
+                <div>Carbon<small>contacts</small></div>
               </div>
+              <p class="media-note">Salesforce stayed in the research. The first bet is one object, one direction, enough to prove the path.</p>
+            </div>
+            <div class="case-copy">
+              <h3>Carbon</h3>
+              <p>Carbon is an AI business OS for smaller companies. I researched how Salesforce and Mailchimp model users, core objects, OAuth, and rate limits, and wrote that up across three pull requests. The slice in progress copies Mailchimp audiences into Carbon contacts and has to survive expired tokens, rate limits, and partial syncs.</p>
+              <p class="stack">OAuth · REST · Salesforce · Mailchimp · Node.js</p>
+            </div>
+          </article>
+
+          <article class="case" id="case-xrchitect" role="tabpanel" aria-labelledby="tab-xrchitect" hidden>
+            <div class="case-media">
+              <iframe title="XRchitect demo" data-src="https://www.youtube.com/embed/nA4qaKeVBL8" allow="fullscreen" allowfullscreen loading="lazy"></iframe>
+            </div>
+            <div class="case-copy">
               <h3>XRchitect</h3>
-              <p>A VR interior design tool for walking through layouts, reviewing ideas in scale, and making spatial decisions faster.</p>
-              <ul>
-                <li>Turned static planning into something clients and teams could actually step inside.</li>
-                <li>Used in both professional and learning-focused environments.</li>
-              </ul>
-              <a class="text-link" href="https://www.meta.com/en-gb/experiences/xrchitect/8001533676569691/" target="_blank" rel="noopener">View on Meta Store</a>
+              <p>A collaborative VR interior design app. Several people edit the same room, and Photon keeps that shared state in sync. It is on the Meta Store, used for both client walkthroughs and learning.</p>
+              <p class="stack">Meta XR SDK · Photon · Unity</p>
+              <a class="text-link" href="https://www.meta.com/en-gb/experiences/xrchitect/8001533676569691/" target="_blank" rel="noopener">View on the Meta Store</a>
             </div>
           </article>
 
-          <article class="project-card reveal">
-            <div class="media-frame">
-              <iframe src="https://www.youtube.com/embed/hwM7kepj4RM?si=QVdBWMl_U4Fq09U4" title="CombatXR demo" loading="lazy" allowfullscreen></iframe>
+          <article class="case" id="case-combat" role="tabpanel" aria-labelledby="tab-combat" hidden>
+            <div class="case-media">
+              <iframe title="Combat-XR demo" data-src="https://www.youtube.com/embed/hwM7kepj4RM" allow="fullscreen" allowfullscreen loading="lazy"></iframe>
             </div>
-            <div class="project-body">
-              <div class="tag-row">
-                <span>Defense</span>
-                <span>XR</span>
-                <span>Simulation</span>
-              </div>
-              <h3>CombatXR</h3>
-              <p>A battlefield training system combining VR, AR, and simulation workflows for more realistic coordinated practice.</p>
+            <div class="case-copy">
+              <h3>Combat-XR</h3>
+              <p>A tactical VR trainer that turns defence drills into scenarios a team can rerun. AI handles scenario management. The interaction layer is Unity’s XR Interaction Toolkit.</p>
+              <p class="stack">Unity · XR Interaction Toolkit</p>
             </div>
           </article>
 
-          <article class="project-card reveal">
-            <div class="media-frame">
-              <iframe src="https://www.youtube.com/embed/iEXv8YZVcqE?si=lj-D_D5A0BA13YpS" title="PlanXR demo" loading="lazy" allowfullscreen></iframe>
+          <article class="case" id="case-teletwin" role="tabpanel" aria-labelledby="tab-teletwin" hidden>
+            <div class="case-media">
+              <iframe title="TeleTwin demo" data-src="https://www.youtube.com/embed/5XzGIZFhy10" allow="fullscreen" allowfullscreen loading="lazy"></iframe>
             </div>
-            <div class="project-body">
-              <div class="tag-row">
-                <span>Mixed Reality</span>
-                <span>Collaboration</span>
-              </div>
-              <h3>PlanXR</h3>
-              <p>A mixed reality planning tool for terrain review, scenario mapping, and shared decision-making.</p>
-            </div>
-          </article>
-
-          <article class="project-card reveal">
-            <div class="media-frame">
-              <iframe src="https://www.youtube.com/embed/5XzGIZFhy10?si=0ZQ_uZ4MGG5qvW4N" title="TeleTwin demo" loading="lazy" allowfullscreen></iframe>
-            </div>
-            <div class="project-body">
-              <div class="tag-row">
-                <span>Digital Twin</span>
-                <span>Infrastructure</span>
-              </div>
+            <div class="case-copy">
               <h3>TeleTwin</h3>
-              <p>A 3D telecom tower twin built for inspection, planning, and clearer infrastructure visibility.</p>
+              <p>A live twin of telecom tower assets. A YOLO pipeline watches the scene and a PostgreSQL stream keeps the operational record, so a remote team can inspect without a site visit.</p>
+              <p class="stack">Python · YOLO · PostgreSQL</p>
             </div>
           </article>
 
-          <article class="project-card reveal">
-            <div class="media-frame">
-              <img src="teleattendance.jpg" alt="TeleAttendance preview" loading="lazy">
+          <article class="case" id="case-arnav" role="tabpanel" aria-labelledby="tab-arnav" hidden>
+            <div class="case-media spec-media ar-media">
+              <svg viewBox="0 0 640 360" class="ar-map" role="img" aria-label="Diagram of a path drawn over a floor grid">
+                <rect width="640" height="360" fill="#17180f"></rect>
+                <g stroke="rgba(231,225,213,0.16)" stroke-width="1">
+                  <path d="M0 60 H640 M0 120 H640 M0 180 H640 M0 240 H640 M0 300 H640 M80 0 V360 M160 0 V360 M240 0 V360 M320 0 V360 M400 0 V360 M480 0 V360 M560 0 V360"></path>
+                </g>
+                <path d="M90 300 C 140 300, 160 210, 230 200 S 360 120, 520 90" fill="none" stroke="#d6ff4a" stroke-width="6" stroke-linecap="round"></path>
+                <circle cx="90" cy="300" r="10" fill="#d6ff4a"></circle>
+                <circle cx="520" cy="90" r="10" fill="#efe8d8"></circle>
+                <text x="108" y="292" fill="#efe8d8" font-family="IBM Plex Mono, monospace" font-size="14">YOU</text>
+                <text x="428" y="78" fill="#efe8d8" font-family="IBM Plex Mono, monospace" font-size="14">GATE</text>
+              </svg>
             </div>
-            <div class="project-body">
-              <div class="tag-row">
-                <span>Automation</span>
-                <span>Bot</span>
-                <span>Backend</span>
-              </div>
-              <h3>TeleAttendance</h3>
-              <p>A Telegram-based attendance bot that handled validation, timestamps, and cleaner record-keeping.</p>
-              <a class="text-link" href="https://github.com/DamanAhuja/TeleBot" target="_blank" rel="noopener">Open GitHub Repo</a>
+            <div class="case-copy">
+              <h3>AR indoor navigation</h3>
+              <p>Marker-based wayfinding in the browser. The path is drawn over the physical room with WebXR, so a first-time visitor does not install an app. Separate from the airport proof of concept, which used ARCore on device.</p>
+              <p class="stack">WebXR · SVG · JavaScript · ARCore</p>
             </div>
           </article>
 
-          <article class="project-card reveal">
-            <div class="media-frame">
-              <iframe src="https://www.youtube.com/embed/ejV5lLngW60?si=RNK_Z-A4OcSf1Sqz" title="TopologyXR demo" loading="lazy" allowfullscreen></iframe>
+          <article class="case" id="case-topology" role="tabpanel" aria-labelledby="tab-topology" hidden>
+            <div class="case-media">
+              <iframe title="TopologyXR demo" data-src="https://www.youtube.com/embed/ejV5lLngW60" allow="fullscreen" allowfullscreen loading="lazy"></iframe>
             </div>
-            <div class="project-body">
-              <div class="tag-row">
-                <span>VR/MR</span>
-                <span>AI-assisted</span>
-              </div>
+            <div class="case-copy">
               <h3>TopologyXR</h3>
-              <p>A data center planning environment with detailed scanned assets and AI-assisted layout generation.</p>
-              <a class="text-link" href="https://www.meta.com/en-gb/experiences/topologyxr/8754157244597877/" target="_blank" rel="noopener">View on Meta Store</a>
+              <p>A data-center planning space built from scanned infrastructure. Layout generation is AI-assisted, and the assets are detailed enough to review a room in a headset.</p>
+              <p class="stack">VR / MR · photogrammetry · AI-assisted layout</p>
+              <a class="text-link" href="https://www.meta.com/en-gb/experiences/topologyxr/8754157244597877/" target="_blank" rel="noopener">View on the Meta Store</a>
             </div>
           </article>
 
-          <article class="project-card reveal compact">
-            <div class="project-body">
-              <div class="tag-row">
-                <span>Cybersecurity</span>
-                <span>MR</span>
-              </div>
-              <h3>Threat Monitoring Digital Twin</h3>
-              <p>A mixed reality visualization layer for turning security data into something easier to explore and act on.</p>
+          <article class="case" id="case-attendance" role="tabpanel" aria-labelledby="tab-attendance" hidden>
+            <div class="case-media">
+              <img src="teleattendance.jpg" alt="TeleAttendance rule screen with recipients, location, message, and repeat options">
             </div>
-          </article>
-
-          <article class="project-card reveal compact">
-            <div class="project-body">
-              <div class="tag-row">
-                <span>Unity</span>
-                <span>Game Dev</span>
-              </div>
-              <h3>Archery, CrossRoad, Galaxy Shooter</h3>
-              <p>Smaller game projects I used to sharpen gameplay systems, iteration speed, and performance-aware implementation.</p>
-              <a class="text-link" href="https://github.com/DamanAhuja/Archery.git" target="_blank" rel="noopener">Open Archery Repo</a>
+            <div class="case-copy">
+              <h3>TeleAttendance</h3>
+              <p>An attendance pipeline with a Telegram bot in front, a REST API in the middle, and a database behind it. The manual entry step is gone. Logging and lookup happen as the messages come in.</p>
+              <p class="stack">Node.js · Telegram Bot API · REST · SQL</p>
+              <a class="text-link" href="https://github.com/DamanAhuja/TeleBot" target="_blank" rel="noopener">Open the GitHub repo</a>
             </div>
           </article>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section id="experience" class="section">
-        <div class="section-intro reveal">
-          <p class="eyebrow">Experience</p>
-          <h2>Work, research, and the path so far.</h2>
-        </div>
-
-        <div class="timeline-grid">
-          <article class="timeline-card reveal">
-            <span class="timeline-label">Experience</span>
-            <h3>CTO, XRVisionLabs</h3>
-            <p>Led a multidisciplinary team delivering XR and AI work across product direction, technical planning, and client execution.</p>
-          </article>
-          <article class="timeline-card reveal">
-            <span class="timeline-label">Experience</span>
-            <h3>Software Developer, XRVisionLabs</h3>
-            <p>Built immersive products including XRchitect, CombatXR, and WebXR navigation workflows.</p>
-          </article>
-          <article class="timeline-card reveal">
-            <span class="timeline-label">Research</span>
-            <h3>Research Intern, Delhi University</h3>
-            <p>Prototyped motion tracking workflows using Azure Kinect, Unity, and Unreal Engine for immersive environments.</p>
-          </article>
-          <article class="timeline-card reveal">
-            <span class="timeline-label">Education</span>
-            <h3>B.Sc. (Hons.) Computer Science</h3>
-            <p>Delhi University, expected 2027.</p>
-          </article>
-          <article class="timeline-card reveal">
-            <span class="timeline-label">Academics</span>
-            <h3>School Performance</h3>
-            <p>90% in AISSCE (PCM) in 2023 and 87% in AISSCE in 2021.</p>
-          </article>
-          <article class="timeline-card reveal">
-            <span class="timeline-label">Speaking</span>
-            <h3>Public-facing communication</h3>
-            <p>Guest lecture at OP Jindal School of Art and Architecture, plus a remote talk at AWE Nite Florida.</p>
-          </article>
-        </div>
-      </section>
-
-      <section id="research" class="section">
-        <div class="section-intro reveal">
-          <p class="eyebrow">Research</p>
-          <h2>Computer vision and photogrammetry work behind the product side.</h2>
-          <p>These projects matter because they show I am comfortable working close to sensing, spatial computing, and technical experimentation, not just interface layers.</p>
-        </div>
-
-        <div class="research-grid">
-          <article class="project-card reveal">
-            <div class="media-frame">
-              <iframe src="https://www.youtube.com/embed/DaCBIIq7UjI" title="Advanced motion tracking research" loading="lazy" allowfullscreen></iframe>
-            </div>
-            <div class="project-body">
-              <h3>Advanced Motion Tracking</h3>
-              <p>Explored pose estimation, skeletal tracking, and more responsive immersive interaction using sensor-driven inputs.</p>
-            </div>
-          </article>
-
-          <article class="project-card reveal">
-            <div class="media-frame">
-              <img src="Pose.jpeg" alt="Pose detection with Kinect" loading="lazy">
-            </div>
-            <div class="project-body">
-              <h3>Pose Detection with Kinect</h3>
-              <p>Real-time body tracking work using Microsoft Kinect for motion analysis, gesture systems, and XR interaction.</p>
-            </div>
-          </article>
-
-          <article class="project-card reveal">
-            <div class="media-frame">
-              <iframe src="https://www.youtube.com/embed/VIb4JDBwt-Y" title="Multiple Kinect holographic 3D experience" loading="lazy" allowfullscreen></iframe>
-            </div>
-            <div class="project-body">
-              <h3>Multi-Kinect Holographic Capture</h3>
-              <p>Combined depth data from multiple sensors to push toward richer multi-angle holographic capture.</p>
-            </div>
-          </article>
-        </div>
-
-        <div class="section-intro reveal photogrammetry-intro">
-          <p class="eyebrow">3D Assets</p>
-          <h2>Photogrammetry workflows for usable production assets.</h2>
-          <p>I worked on scanning, reconstruction, cleanup, texturing, UV mapping, and optimization for detailed 3D models.</p>
-        </div>
-
-        <div class="model-grid">
-          <article class="model-card reveal">
-            <model-viewer
-              src="models/310.glb"
-              ios-src="models/310.usdz"
-              poster="https://xrvisionlabs.com/wp-content/uploads/loading.svg"
-              alt="3D model of a server"
-              shadow-intensity="1"
-              exposure="1"
-              camera-controls
-              auto-rotate
-            ></model-viewer>
-            <div class="project-body">
-              <h3>310 Server</h3>
-              <p>A photorealistic infrastructure asset prepared for immersive product environments.</p>
-            </div>
-          </article>
-
-          <article class="model-card reveal">
-            <model-viewer
-              src="models/Lab_2.glb"
-              ios-src="models/Lab.usdz"
-              poster="https://xrvisionlabs.com/wp-content/uploads/loading.svg"
-              alt="3D model of a virtual lab"
-              shadow-intensity="1"
-              exposure="1"
-              camera-controls
-              auto-rotate
-            ></model-viewer>
-            <div class="project-body">
-              <h3>Virtual Lab</h3>
-              <p>Environment model demonstrating scan-to-usable-asset workflow quality.</p>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="section-intro reveal">
-          <p class="eyebrow">Highlights</p>
-          <h2>Other things worth knowing.</h2>
-        </div>
-
-        <div class="highlight-grid">
-          <article class="info-card reveal">
-            <h3>Academic achievements</h3>
-            <p>School rank 3 in Silver Zone Math Olympiad and 95% in Physics in CBSE examinations.</p>
-          </article>
-          <article class="info-card reveal">
-            <h3>Certifications</h3>
-            <p>Unity Development, AI Workshop, and Augmented Reality coursework.</p>
-          </article>
-          <article class="info-card reveal">
-            <h3>Outside tech</h3>
-            <p>Silver Medalist under IAYP and multiple medals and trophies in hip hop dance competitions.</p>
-          </article>
-        </div>
-      </section>
-    </main>
-
-    <footer id="contact" class="footer reveal">
-      <div>
-        <p class="eyebrow">Contact</p>
-        <h2>If you want to build something solid, reach out.</h2>
-        <p>Happy to talk about XR, product work, engineering, or anything interesting at the edge of those areas.</p>
+    <section id="record" class="section">
+      <div class="section-intro reveal">
+        <p class="eyebrow">Record</p>
+        <h2>Several of these ran at the same time.</h2>
       </div>
 
-      <div class="footer-actions">
-        <a class="button button-primary" href="mailto:damanahuja09@gmail.com">damanahuja09@gmail.com</a>
-        <a class="button button-secondary" href="Daman Ahuja - Resume.pdf" target="_blank" rel="noopener">Open Resume</a>
+      <ol class="record reveal">
+        <li>
+          <time datetime="2026-06">Jun 2026 — Present</time>
+          <div>
+            <h3>AI and Automation Intern <span>GMR Group, Smart Airport City</span></h3>
+            <p>Smart Buggy at Terminal 3, IGI Airport. Android apps, the MQTT telemetry loop, and an ARCore wayfinding proof of concept.</p>
+          </div>
+        </li>
+        <li>
+          <time datetime="2026-09">Sep 2026 — Present</time>
+          <div>
+            <h3>Software Engineering Intern <span>Tap4Technologies, remote</span></h3>
+            <p>Carbon. Salesforce and Mailchimp research, then the first sync from Mailchimp audiences into Carbon contacts.</p>
+          </div>
+        </li>
+        <li>
+          <time datetime="2024-02/2026-05">Feb 2024 — May 2026</time>
+          <div>
+            <h3>Virtual Reality Development Intern <span>University of Delhi</span></h3>
+            <p>Azure Kinect skeletal tracking at 30 fps, sensor fusion for full-body avatars, and prototypes in Unity and Unreal.</p>
+          </div>
+        </li>
+        <li>
+          <time datetime="2024-02/2025-10">Feb 2024 — Oct 2025</time>
+          <div>
+            <h3>Founding member and CTO <span>XRVisionLabs</span></h3>
+            <p>A six-person team across two client projects and three releases, delivered on time. Product direction, the build, and client delivery sat in the same seat.</p>
+          </div>
+        </li>
+        <li>
+          <time datetime="2024-01/2025-08">Jan 2024 — Aug 2025</time>
+          <div>
+            <h3>Game developer <span>AltReality Labs</span></h3>
+            <p>Three physics simulations shipped in Unity: archery, bowling, and road crossing. Projectile motion, rigid bodies, and scoring.</p>
+          </div>
+        </li>
+        <li>
+          <time datetime="2023-08/2024-07">Aug 2023 — Jul 2024</time>
+          <div>
+            <h3>Data Management Head <span>Placement Cell, University of Delhi</span></h3>
+            <p>Student and alumni databases behind placement and internship drives, between recruiters and candidates.</p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="record-extra reveal">
+        <article>
+          <p class="eyebrow">Education</p>
+          <h3>B.Sc. (Hons.) Computer Science</h3>
+          <p>University of Delhi, 2023–2027. CGPA 7.72. Class XII, CBSE, 89.2%.</p>
+        </article>
+        <article>
+          <p class="eyebrow">In public</p>
+          <h3>Talks and open source</h3>
+          <p>Guest speaker at AWE Nite Orlando. Guest lecturer on XR and AI at Jindal University of Art and Architecture. Open-source contributions to Mozilla Firefox and Bentley iTwin.</p>
+        </article>
       </div>
-    </footer>
-  </div>
+    </section>
+
+    <section id="lab" class="section">
+      <div class="section-intro reveal">
+        <p class="eyebrow">Lab</p>
+        <h2>Tracking, scans, and the experiments beside the products.</h2>
+      </div>
+
+      <div class="lab-switcher reveal" data-lab>
+        <div class="lab-tabs" role="tablist" aria-label="Lab demos">
+          <button role="tab" aria-selected="true" data-src="https://www.youtube.com/embed/DaCBIIq7UjI" data-title="Advanced motion tracking">Motion tracking</button>
+          <button role="tab" aria-selected="false" data-src="https://www.youtube.com/embed/VIb4JDBwt-Y" data-title="Multiple Kinect holographic capture">Multi-Kinect</button>
+          <button role="tab" aria-selected="false" data-src="https://www.youtube.com/embed/iEXv8YZVcqE" data-title="PlanXR demo">PlanXR</button>
+          <button role="tab" aria-selected="false" data-still="Pose.jpeg" data-title="Pose detection with Kinect">Pose still</button>
+        </div>
+        <div class="lab-stage">
+          <iframe title="Advanced motion tracking" data-src="https://www.youtube.com/embed/DaCBIIq7UjI" allow="fullscreen" allowfullscreen loading="lazy"></iframe>
+        </div>
+      </div>
+
+      <div class="lab-notes reveal">
+        <article>
+          <h3>Full-body capture</h3>
+          <p>Kinect skeletal data at 30 fps, fused into avatars. The still is a multi-person pose pass from that research.</p>
+        </article>
+        <article>
+          <h3>ML-Agents</h3>
+          <p>Reinforcement-learning agents in Unity. Reward shaping and policy iteration, watched across 500+ evaluation episodes.</p>
+        </article>
+        <article>
+          <h3>Pixel streaming</h3>
+          <p>A high-fidelity Unreal scene streamed to the browser, with the build and distribution pipeline automated end to end.</p>
+        </article>
+        <article>
+          <h3>Also shipped</h3>
+          <p>PlanXR, a mixed-reality planning tool. A threat-monitoring twin for security data. Three small Unity games, including <a href="https://github.com/DamanAhuja/Archery.git" target="_blank" rel="noopener">Archery</a>.</p>
+        </article>
+      </div>
+
+      <div class="model-grid">
+        <article class="model-card reveal">
+          <model-viewer
+            src="models/310.glb"
+            ios-src="models/310.usdz"
+            alt="3D scan of a server"
+            shadow-intensity="1"
+            exposure="1"
+            camera-controls
+            auto-rotate
+          ></model-viewer>
+          <div>
+            <h3>310 server</h3>
+            <p>Photogrammetry asset, cleaned and light enough for an immersive scene. Drag to orbit.</p>
+          </div>
+        </article>
+        <article class="model-card reveal">
+          <model-viewer
+            src="models/Lab_2.glb"
+            ios-src="models/Lab.usdz"
+            alt="3D scan of a virtual lab"
+            shadow-intensity="1"
+            exposure="1"
+            camera-controls
+            auto-rotate
+          ></model-viewer>
+          <div>
+            <h3>Virtual lab</h3>
+            <p>A scanned room taken through cleanup, texture, UVs, and optimization.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contact" class="footer">
+    <div>
+      <p class="eyebrow">Contact</p>
+      <h2>If the problem is messy and the deadline is real, write.</h2>
+      <p>XR, airport systems, integrations, or a prototype that has to become a product.</p>
+    </div>
+    <div class="footer-links">
+      <a class="button button-primary" href="mailto:damanahuja09@gmail.com">damanahuja09@gmail.com</a>
+      <a href="https://www.linkedin.com/in/daman-ahuja/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/damanahuja" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://x.com/damanahuja09" target="_blank" rel="noopener">X</a>
+    </div>
+    <ul class="resume-row" aria-label="Resumes">
+      <li><a href="Resumes/Daman_Ahuja_Software_Developer.pdf">Software resume</a></li>
+      <li><a href="Resumes/Daman_Ahuja_AR_VR_Developer.pdf">AR / VR resume</a></li>
+      <li><a href="Resumes/Daman_Ahuja_AI_ML.pdf">AI / ML resume</a></li>
+      <li><a href="Resumes/Daman_Ahuja_Product_Manager.pdf">Product resume</a></li>
+    </ul>
+  </footer>
 </body>
 </html>
