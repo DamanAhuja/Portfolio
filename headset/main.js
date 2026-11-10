@@ -228,8 +228,8 @@ const DESK_OBSTACLES = [
   { x: 0.85, z: -0.5, r: 0.3 },
   { x: 0.42, z: 0.16, r: 0.1 },
   { x: 0.98, z: 0.02, r: 0.14 },
-  { x: -0.42, z: -0.62, r: 0.09 },
-  { x: -0.45, z: 0.05, r: 0.055 },
+  { x: -0.7, z: -0.28, r: 0.09 },
+  { x: -0.32, z: 0.1, r: 0.055 },
   { x: -0.95, z: -0.55, r: 0.14 }
 ];
 
@@ -328,7 +328,6 @@ function stopAutoScroll() {
 }
 
 function playTo(p, duration) {
-  if (reduceMotion) return jumpTo(p);
   stopAutoScroll();
   const max = document.documentElement.scrollHeight - window.innerHeight;
   const from = window.scrollY;
@@ -530,7 +529,7 @@ function buildRoom() {
   scene.add(laptop);
 
   const mug = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.045, 0.11, 32), new THREE.MeshStandardMaterial({ color: 0xd6ff4a, roughness: 0.5 }));
-  mug.position.set(-0.45, 0.955, 0.05);
+  mug.position.set(-0.32, 0.955, 0.1);
   mug.castShadow = true;
   scene.add(mug);
 
@@ -544,7 +543,7 @@ function buildRoom() {
   controller.position.set(0.42, 0.9, 0.16);
   controller.rotation.y = 0.35;
   const globe = buildGlobe();
-  globe.group.position.set(-0.42, 0.9, -0.62);
+  globe.group.position.set(-0.7, 0.9, -0.28);
   scene.add(headphones, controller, globe.group);
 
   const balls = [
@@ -560,7 +559,7 @@ function buildRoom() {
   const props = [
     { key: "music", group: headphones, hit: headphones, anchor: new THREE.Vector3(0.98, 1.22, 0.02) },
     { key: "games", group: controller, hit: controller, anchor: new THREE.Vector3(0.42, 1.02, 0.16) },
-    { key: "travel", group: globe.group, hit: globe.group, anchor: new THREE.Vector3(-0.42, 1.25, -0.62) },
+    { key: "travel", group: globe.group, hit: globe.group, anchor: new THREE.Vector3(-0.7, 1.25, -0.28) },
     { key: "lamp", group: null, hit: lampHit, anchor: null },
     { key: "laptop", group: laptop, hit: laptop, anchor: null },
     { key: "headset", group: headset.group, hit: headset.group, anchor: null },
@@ -925,7 +924,8 @@ const tmpC = new THREE.Vector3();
 
 function updateRoom(p, time, dt) {
   const { group, lensMat } = room.headset;
-  if (!reduceMotion) room.globe.sphere.rotation.y += dt * (hoveredProp === "travel" ? 1.4 : 0.25);
+  if (hoveredProp === "travel") room.globe.sphere.rotation.y += dt * 1.4;
+  else if (!reduceMotion) room.globe.sphere.rotation.y += dt * 0.25;
   updateBalls(dt);
   if (p < P.roomSwitch) {
     const lift = smooth(range(p, 0.03, 0.2));
@@ -1830,7 +1830,7 @@ function renderTravel(body, fun) {
         passes[final].classList.add("is-picked");
         result.textContent = `Next trip: ${fun.passes[final].name.toLowerCase()}. Bags are already packed.`;
       }
-    }, reduceMotion ? 10 : 110);
+    }, 110);
   });
   return () => clearInterval(timer);
 }

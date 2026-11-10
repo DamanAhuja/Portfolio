@@ -807,8 +807,5 @@ body.is-hovering-panel { cursor: pointer; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scroll-hint span, .vinyl, .eq i { animation: none; }
-  .eq i { transform: scaleY(0.6); }
-  .eq i:nth-child(3n) { transform: scaleY(0.85); }
-  .eq i:nth-child(4n + 1) { transform: scaleY(0.35); }
+  .scroll-hint span { animation: none; }
 }
