@@ -319,6 +319,34 @@ function jumpTo(p) {
   window.scrollTo({ top: p * max, behavior: reduceMotion ? "auto" : "smooth" });
 }
 
+let autoScroll = 0;
+
+function stopAutoScroll() {
+  cancelAnimationFrame(autoScroll);
+  autoScroll = 0;
+  ["wheel", "touchstart", "keydown", "pointerdown"].forEach((type) => window.removeEventListener(type, stopAutoScroll));
+}
+
+function playTo(p, duration) {
+  if (reduceMotion) return jumpTo(p);
+  stopAutoScroll();
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  const from = window.scrollY;
+  const to = p * max;
+  const start = performance.now();
+  const step = (now) => {
+    const t = Math.min((now - start) / duration, 1);
+    const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    window.scrollTo(0, from + (to - from) * eased);
+    autoScroll = t < 1 ? requestAnimationFrame(step) : 0;
+    if (!autoScroll) stopAutoScroll();
+  };
+  autoScroll = requestAnimationFrame(step);
+  ["wheel", "touchstart", "keydown", "pointerdown"].forEach((type) => window.addEventListener(type, stopAutoScroll, { passive: true }));
+}
+
+let headsetPoke = -10;
+
 document.querySelectorAll("[data-jump]").forEach((el) => {
   el.addEventListener("click", (event) => {
     event.preventDefault();
@@ -354,7 +382,10 @@ canvas.addEventListener("click", (event) => {
   if (key === "lamp") toggleLamp();
   else if (key === "football" || key === "cricket") kickBall(key);
   else if (key === "laptop") room.props.find((prop) => prop.key === "laptop").group.userData.nextLine();
-  else if (key === "headset") jumpTo(P.ringStart);
+  else if (key === "headset") {
+    if (p < P.roomSwitch) playTo(P.ringStart + 0.01, 5200);
+    else headsetPoke = clock.elapsedTime;
+  }
   else openFun(key);
 });
 
@@ -914,6 +945,12 @@ function updateRoom(p, time, dt) {
     group.position.copy(H_REST);
     group.rotation.set(-0.04, 0.6, 0.05);
     lensMat.emissiveIntensity = 0.1;
+    const poke = (time - headsetPoke) / 0.9;
+    if (poke >= 0 && poke < 1) {
+      group.position.y += Math.sin(poke * Math.PI) * 0.12;
+      group.rotation.y += smooth(poke) * Math.PI * 2;
+      lensMat.emissiveIntensity = 0.1 + Math.sin(poke * Math.PI) * 2.4;
+    }
     const drift = reduceMotion ? 0 : Math.sin(time * 0.3) * 0.06;
     const leave = smooth(range(p, P.funEnd, P.funEnd + 0.015));
     camera.position.lerpVectors(CAM_FUN, CAM_EXIT, leave);
