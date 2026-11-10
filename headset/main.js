@@ -161,6 +161,18 @@ const P = {
   funEnd: 0.955
 };
 
+const DESK_TOP = 0.9;
+const DESK_BOUNDS = { minX: -1.27, maxX: 1.27, minZ: -0.97, maxZ: 0.28 };
+const DESK_OBSTACLES = [
+  { x: 0.05, z: -0.15, r: 0.3 },
+  { x: 0.85, z: -0.5, r: 0.3 },
+  { x: 0.42, z: 0.16, r: 0.1 },
+  { x: 0.98, z: 0.02, r: 0.14 },
+  { x: -0.42, z: -0.62, r: 0.09 },
+  { x: -0.45, z: 0.05, r: 0.055 },
+  { x: -0.95, z: -0.55, r: 0.14 }
+];
+
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, t) => a + (b - a) * t;
 const smooth = (t) => t * t * (3 - 2 * t);
@@ -201,7 +213,6 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.01, 200);
 
 const room = buildRoom();
-window.__dbg = { room, kickBall: (k) => kickBall(k) };
 const vr = buildVR();
 
 const fade = document.getElementById("fade");
@@ -445,18 +456,6 @@ function buildRoom() {
   return { scene, headset, props, globe, balls, lamp, bulb, lampOn: true };
 }
 
-const DESK_TOP = 0.9;
-const DESK_BOUNDS = { minX: -1.27, maxX: 1.27, minZ: -0.97, maxZ: 0.28 };
-const DESK_OBSTACLES = [
-  { x: 0.05, z: -0.15, r: 0.3 },
-  { x: 0.85, z: -0.5, r: 0.3 },
-  { x: 0.42, z: 0.16, r: 0.1 },
-  { x: 0.98, z: 0.02, r: 0.14 },
-  { x: -0.42, z: -0.62, r: 0.09 },
-  { x: -0.45, z: 0.05, r: 0.055 },
-  { x: -0.95, z: -0.55, r: 0.14 }
-];
-
 function buildBall(key, radius, x, z) {
   const ballCanvas = document.createElement("canvas");
   ballCanvas.width = 512;
@@ -510,7 +509,7 @@ function kickBall(key) {
   const ball = room.balls.find((b) => b.key === key);
   if (!ball) return;
   const angle = Math.random() * Math.PI * 2;
-  const speed = 0.5 + Math.random() * 0.35;
+  const speed = 0.8 + Math.random() * 0.4;
   ball.vel.set(Math.cos(angle) * speed, 1.5 + Math.random() * 0.5, Math.sin(angle) * speed);
   ball.moving = true;
 }
