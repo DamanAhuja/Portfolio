@@ -44,31 +44,55 @@ img { max-width: 100%; display: block; }
 
 .name {
   color: var(--ink);
-  font: 600 1.3rem/1.05 var(--serif);
+  font: 700 clamp(1.5rem, 2.4vw, 1.95rem)/1.02 var(--serif);
+  letter-spacing: -0.01em;
   text-decoration: none;
 }
 
 .nav {
   display: flex;
-  gap: 28px;
-  padding-top: 18px;
+  gap: 36px;
+  padding-top: 24px;
 }
 
 .nav a {
   color: var(--ink);
-  font-weight: 500;
-  font-size: 0.95rem;
+  font-weight: 600;
+  font-size: 1.08rem;
   text-decoration: none;
 }
 
-.nav a:hover { text-decoration: underline; text-underline-offset: 5px; }
+.nav a:hover, .nav a[aria-current="page"] { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px; }
+
+.hero-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: #d9c9cf url("hero.jpg") center 60% / cover no-repeat;
+}
 
 .hero {
   position: relative;
   height: 100vh;
   min-height: 520px;
-  background: #d9c9cf url("hero.jpg") center 60% / cover no-repeat;
 }
+
+.page {
+  position: relative;
+  background: var(--paper);
+}
+
+.contact-section {
+  width: var(--wrap);
+  margin: 0 auto;
+  padding: 10px 0 20px;
+}
+
+.contact-more { margin-top: 26px !important; }
+
+.contact-more a { color: var(--link); text-underline-offset: 3px; }
+
+.about-page .about { padding-top: 170px; }
 
 .hero-line {
   position: absolute;
@@ -317,13 +341,13 @@ img { max-width: 100%; display: block; }
   margin-top: 90px;
 }
 
-.about-grid h3 {
+.about-grid h2 {
   margin: 0 0 18px;
   color: var(--ink);
   font: 500 1.3rem var(--serif);
 }
 
-.about-grid p + h3 { margin-top: 36px; }
+.about-grid p + h2 { margin-top: 36px; }
 
 .timeline, .plain-list { margin: 0; padding: 0; list-style: none; }
 
